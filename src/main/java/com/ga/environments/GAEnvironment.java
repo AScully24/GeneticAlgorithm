@@ -2,24 +2,15 @@ package com.ga.environments;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+
 import com.ga.individuals.Individual;
-import com.ga.individuals.SimpleIndividual;
 
 public class GAEnvironment {
 	static int POPULATION_SIZE = 50;
 	ArrayList<Individual> population = new ArrayList<Individual>();
-	
+
 	public GAEnvironment(ArrayList<Individual> population) {
 		this.population = population;
-	}
-	
-	/**
-	 * Default constructor creates a simple population.
-	 */
-	public GAEnvironment() {
-		for (int i = 0; i < POPULATION_SIZE; i++) {
-			population.add(new SimpleIndividual());
-		}
 	}
 
 	/**
@@ -143,6 +134,25 @@ public class GAEnvironment {
 			}
 		}
 		return fittestIndividual;
+	}
+
+	public Individual multipleGenerations(int generationCount) {
+
+		Individual overallFittesIndividual = getFittestsIndividual();
+		System.out.println("Max Fitness,Average Fitness");
+		for (int i = 0; i < generationCount; i++) {
+			generateNewPopulation();
+			Individual currentfittestsIndividual = getFittestsIndividual();
+			
+			// REMOVE: Remove output when from final release
+			System.out.printf("%d,%2f\n",currentfittestsIndividual.getFitness(),getCurrentPopulationAverageFitness());
+			
+			if (currentfittestsIndividual.getFitness() > overallFittesIndividual.getFitness()) {
+				overallFittesIndividual = currentfittestsIndividual;
+			}
+		}
+
+		return overallFittesIndividual;
 	}
 
 	public ArrayList<Individual> getPopulation() {
