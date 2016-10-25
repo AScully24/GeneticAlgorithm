@@ -20,9 +20,9 @@ public class GAEnvironment {
 	public ArrayList<Individual> createRouletteWheel(ArrayList<Individual> popToCheck) {
 		double totalFitness = getPopulationTotalFitness(popToCheck);
 		ArrayList<Individual> rouletteWheel = new ArrayList<Individual>();
-
+		
 		for (Individual individual : popToCheck) {
-			long rouletteCount = Math.round((individual.getFitness() / totalFitness) * 100);
+			long rouletteCount = (long) Math.ceil((individual.getFitness() / totalFitness) * 100);
 			for (int i = 0; i < rouletteCount; i++) {
 				rouletteWheel.add(individual);
 			}
@@ -32,8 +32,8 @@ public class GAEnvironment {
 
 	public void generateNewPopulation() {
 		ArrayList<Individual> offspring = selectionCrossover();
-		selectionCompetition(offspring);
-		// selectionNewPopulationFromOffspring(offspring);
+		population = selectionCompetition(offspring);
+//		selectionNewPopulationFromOffspring(offspring);
 	}
 
 	@SuppressWarnings("unused")
@@ -41,12 +41,13 @@ public class GAEnvironment {
 		ArrayList<Individual> rouletteWheel = createRouletteWheel(offspring);
 		ArrayList<Individual> newPopulation = new ArrayList<Individual>();
 		int populationSize = population.size();
-
+		
+		
 		for (int i = 0; i < populationSize; i++) {
 			int random = ThreadLocalRandom.current().nextInt(rouletteWheel.size());
 			newPopulation.add(rouletteWheel.get(random));
 		}
-
+		replaceWeakestWithElite(getFittestsIndividual(), newPopulation);
 		population = newPopulation;
 	}
 
@@ -59,9 +60,10 @@ public class GAEnvironment {
 	private ArrayList<Individual> selectionCrossover() {
 
 		ArrayList<Individual> rouletteWheel = createRouletteWheel(population);
+//		ArrayList<Individual> rouletteWheel = selectionCompetition(population);
 		ArrayList<Individual> offspring = new ArrayList<Individual>();
 		int populationSize = population.size();
-
+		
 		for (int i = 0; i < populationSize; i++) {
 			Individual parent1 = selectRandomFromArrayList(rouletteWheel);
 			Individual parent2 = selectRandomFromArrayList(rouletteWheel);
@@ -76,17 +78,19 @@ public class GAEnvironment {
 	}
 
 	private Individual selectRandomFromArrayList(ArrayList<Individual> array) {
-		return array.get(ThreadLocalRandom.current().nextInt(array.size()));
+		int size = array.size();
+		return array.get(ThreadLocalRandom.current().nextInt(size));
 	}
 
 	/**
 	 * Recreates the population by comparing the fitness of the individuals, and
 	 * allowing the higher fitness individual into the next generation..
+	 * @return 
 	 */
-	protected void selectionCompetition(ArrayList<Individual> toCompete) {
+	protected ArrayList<Individual> selectionCompetition(ArrayList<Individual> toCompete) {
 		ArrayList<Individual> offspring = new ArrayList<Individual>();
 		int populationSize = population.size();
-
+		
 		for (int i = 0; i < populationSize; i++) {
 
 			Individual parent1 = selectRandomFromArrayList(toCompete);
@@ -98,7 +102,10 @@ public class GAEnvironment {
 				offspring.add(parent2);
 			}
 		}
-		population = offspring;
+		
+		replaceWeakestWithElite(getFittestsIndividual(),offspring);
+		
+		return offspring;
 	}
 
 	/**
@@ -126,6 +133,26 @@ public class GAEnvironment {
 		return (sum / count);
 	}
 
+	public void replaceWeakestWithElite(Individual fittestIndividual, ArrayList<Individual> popToChange) {
+		Individual weakestIndividual = popToChange.get(0);
+		int weakestIndex = 0;
+		
+		for (int i = 0; i < popToChange.size(); i++) {
+			Individual individual = popToChange.get(i);
+			if (individual.getFitness() < weakestIndividual.getFitness()) {
+				weakestIndividual = individual;
+				weakestIndex = i;
+			}
+		}
+//		for (Individual individual : popToChange) {
+//			if (individual.getFitness() < weakestIndividual.getFitness()) {
+//				weakestIndividual = individual;
+//			}
+//		}
+		
+		popToChange.set(weakestIndex, fittestIndividual);
+	}
+	
 	public Individual getFittestsIndividual() {
 		Individual fittestIndividual = population.get(0);
 		for (Individual individual : population) {
@@ -136,19 +163,30 @@ public class GAEnvironment {
 		return fittestIndividual;
 	}
 
-	public Individual multipleGenerations(int generationCount) {
+	public Individual multipleGenerations(int generationCount, int targetFitness) {
 
 		Individual overallFittesIndividual = getFittestsIndividual();
-		System.out.println("Max Fitness,Average Fitness");
+		System.out.println("Generation,Max Fitness,Average Fitness");
 		for (int i = 0; i < generationCount; i++) {
+
 			generateNewPopulation();
+
 			Individual currentfittestsIndividual = getFittestsIndividual();
 			
-			// REMOVE: Remove output when from final release
-			System.out.printf("%d,%2f\n",currentfittestsIndividual.getFitness(),getCurrentPopulationAverageFitness());
-			
+//			System.out.printf("Generation: %d, Average Fitness: %f, Max Fitness: %d\n",i,getCurrentPopulationAverageFitness(),currentfittestsIndividual.getFitness());
+//			// REMOVE: Remove output when from final release
+//			for (Individual individual : population) {
+//				System.out.println(individual);
+//			}
+//			
+//			System.out.println("\n");
+			System.out.printf("%d,%d,%2f\n", i,currentfittestsIndividual.getFitness(), getCurrentPopulationAverageFitness());
+
 			if (currentfittestsIndividual.getFitness() > overallFittesIndividual.getFitness()) {
 				overallFittesIndividual = currentfittestsIndividual;
+			}
+			if (overallFittesIndividual.getFitness() == targetFitness) {
+				return overallFittesIndividual;
 			}
 		}
 
