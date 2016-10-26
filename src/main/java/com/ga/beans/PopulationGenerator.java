@@ -1,15 +1,12 @@
 package com.ga.beans;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.ga.FileLoader;
 import com.ga.data.Record;
 import com.ga.environments.GAEnvironment;
 import com.ga.individuals.ClassificationIndividual;
@@ -19,94 +16,65 @@ import com.ga.individuals.SimpleIndividual;
 @Configuration
 public class PopulationGenerator {
 
-	int POPULATION_SIZE = 1000;
-
-	@Autowired
-	ArrayList<Record> myRecords;
-
+	@Value("${problem-name}")
+	String problemName;
+	
+	@Value("${file-name}")
+	String fileName;
+	
+	@Value("${rule-count}")
+	int ruleCount;
+	
+	@Value("${bit-input}")
+	int bitInput;
+	
+	@Value("${population-size}")
+	int populationSize;
+	
+	@Value("${target-fitness}")
+	int targetFitness;
+	
+	
 	@Bean
 	public GAEnvironment simplePopulation() {
 		ArrayList<Individual> population = new ArrayList<Individual>();
 
-		for (int i = 0; i < POPULATION_SIZE; i++) {
-			population.add(new SimpleIndividual(POPULATION_SIZE));
+		for (int i = 0; i < populationSize; i++) {
+			population.add(new SimpleIndividual(populationSize));
 		}
 
-		return new GAEnvironment(population);
+		return new GAEnvironment(population, "Simple Population",32);
 	}
 
 	@Bean
 	public GAEnvironment classificationPopulation() {
 		ArrayList<Individual> population = new ArrayList<Individual>();
-
-		for (int i = 0; i < POPULATION_SIZE; i++) {
-			population.add(new ClassificationIndividual(60, myRecords, 6));
+		ArrayList<Record> myRecords = FileLoader.loadBitFileToArrayList(fileName, bitInput - 1);
+		for (int i = 0; i < populationSize; i++) {
+			population.add(new ClassificationIndividual(bitInput * ruleCount, myRecords, bitInput));
 		}
-		return new GAEnvironment(population);
+		return new GAEnvironment(population, problemName,targetFitness);
 	}
 
-	public ArrayList<Record> correctRecords2() {
-
-		ArrayList<Record> records = new ArrayList<>();
-		File file = new File("data2.txt");
-
-		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-			String line;
-
-			while ((line = br.readLine()) != null) {
-				String[] split = line.split(" ");
-				Record newRecord = new Record();
-
-				int[] intArr = new int[6];
-				String charArr = split[0];
-
-				for (int i = 0; i < charArr.length(); i++) {
-					char c = charArr.charAt(i);
-					intArr[i] = Character.getNumericValue(c);
-				}
-
-				newRecord.setInput(intArr);
-				newRecord.setOutput(Integer.parseInt(split[1]));
-				records.add(newRecord);
-			}
-			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return records;
-	}
-	
 	@Bean
-	public ArrayList<Record> correctRecords() {
-
-		ArrayList<Record> records = new ArrayList<>();
-		File file = new File("data1.txt");
-
-		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-			String line;
-
-			while ((line = br.readLine()) != null) {
-				String[] split = line.split(" ");
-				Record newRecord = new Record();
-
-				int[] intArr = new int[5];
-				String charArr = split[0];
-
-				for (int i = 0; i < charArr.length(); i++) {
-					char c = charArr.charAt(i);
-					intArr[i] = Character.getNumericValue(c);
-				}
-
-				newRecord.setInput(intArr);
-				newRecord.setOutput(Integer.parseInt(split[1]));
-				records.add(newRecord);
-			}
-			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+	public GAEnvironment classificationFiveBitPopulation() {
+		int bitSize = 6;
+		ArrayList<Individual> population = new ArrayList<Individual>();
+		ArrayList<Record> myRecords = FileLoader.loadBitFileToArrayList("data1.txt", bitSize - 1);
+		for (int i = 0; i < populationSize; i++) {
+			population.add(new ClassificationIndividual(bitSize * ruleCount, myRecords, bitSize));
 		}
+		return new GAEnvironment(population, "Five Bit Population",32);
+	}
 
-		return records;
+	@Bean
+	public GAEnvironment classificationSixBitPopulation() {
+		int bitSize = 7;
+		ArrayList<Individual> population = new ArrayList<Individual>();
+		ArrayList<Record> myRecords = FileLoader.loadBitFileToArrayList("data2.txt", bitSize - 1);
+		for (int i = 0; i < populationSize; i++) {
+			population.add(new ClassificationIndividual(bitSize * ruleCount, myRecords, bitSize));
+		}
+		return new GAEnvironment(population, "Six Bit Classification",64);
 	}
 }

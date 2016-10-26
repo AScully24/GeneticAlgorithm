@@ -17,10 +17,10 @@ import com.ga.individuals.Individual;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TestGAEnvironmentClassification extends AbstractTestGAEnvironment{
+public class TestGAEnvironmentSixBitClassification extends AbstractTestGAEnvironment{
 
 	@Autowired
-	@Qualifier("classificationPopulation")
+	@Qualifier("classificationSixBitPopulation")
 	GAEnvironment customEnv;
 	
 	@Test
@@ -30,14 +30,16 @@ public class TestGAEnvironmentClassification extends AbstractTestGAEnvironment{
 
 	@Test
 	public void testMultipleGenerations() {
-		runMultipleGenerations(100000, customEnv.getTargetFitness(),false);
+		int targetFitness = 64;
+		runMultipleGenerations(100000, targetFitness,false);
+		
 		Individual fittestsIndividual = gaEnv.getFittestIndividual();
 		ArrayList<Record> fittestRecords = ((ClassificationIndividual)fittestsIndividual).genesToRecordArrayList();
 		
 		for (Record record : fittestRecords) {
 			System.out.println(record);
 		}
-		Assert.assertTrue(gaEnv.getFittestIndividual().getFitness() == customEnv.getTargetFitness());
+		Assert.assertTrue(gaEnv.getFittestIndividual().getFitness() == targetFitness);
 	}
 	
 	@Override

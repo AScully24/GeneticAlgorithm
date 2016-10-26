@@ -27,7 +27,7 @@ public class SimpleIndividual extends AbstractIndividual{
 	@Override
 	protected void mutateGenes(int[] genesToMutate) {
 		for (int i = 0; i < genesToMutate.length; i++) {
-			if (ThreadLocalRandom.current().nextInt(MUTATION_DIVIDER) <= MUTATION_RATE) {
+			if (ThreadLocalRandom.current().nextInt(MUTATION_DIVIDER) <= mutationRate) {
 				genesToMutate[i] = genesToMutate[i] ^ 1;
 			}
 		}

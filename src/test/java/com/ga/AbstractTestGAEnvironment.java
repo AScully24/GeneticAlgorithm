@@ -8,13 +8,14 @@ import com.ga.individuals.Individual;
 
 public abstract class AbstractTestGAEnvironment {
 
+
+	protected GAEnvironment gaEnv;
+
 	@Before
 	public void init() {
 		setGaEnv();
 	}
-
-	protected GAEnvironment gaEnv;
-
+	
 	public void runInitalCreation(boolean checkResult) {
 		for (Individual individual : gaEnv.getPopulation()) {
 			System.out.println(individual.toString());
@@ -25,7 +26,7 @@ public abstract class AbstractTestGAEnvironment {
 	}
 
 	public void runMultipleGenerations(int generationCount, int targetFitness, boolean checkResult) {
-		Individual fittestIndividual = gaEnv.multipleGenerations(generationCount, targetFitness);
+		Individual fittestIndividual = gaEnv.multipleGenerations(1, generationCount, targetFitness);
 		int maxFitness = fittestIndividual.getFitness();
 
 		if (checkResult) {

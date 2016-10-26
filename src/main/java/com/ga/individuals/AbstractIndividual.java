@@ -9,8 +9,10 @@ public abstract class AbstractIndividual implements Individual {
 	// Maximum value of the Gene minus 1 E.g. GENE_MAX_VALUE=4 means that an
 	// individual gene can be a value between 0 and 3.
 	protected int[] genes;
+	protected ArrayList<Object> genes2;
 	protected int geneArraySize;
 	protected int fitness;
+//	protected int mutationRate;
 
 	public AbstractIndividual(int geneArraySize, int geneMaxValue) {
 		this.geneArraySize = geneArraySize;
@@ -25,40 +27,57 @@ public abstract class AbstractIndividual implements Individual {
 		this.genes = genes;
 		this.geneArraySize = genes.length;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ga.individuals.Individual#createChildren(com.ga.individuals.
-	 * SimpleIndividual)
-	 */
+	
+//	public ArrayList<Individual> createChild(Individual partner, int ii){
+//		int randomGenePoint = ThreadLocalRandom.current().nextInt(genes.length + 1);
+//		ArrayList<Object> childGenes1 = new ArrayList<Object>();
+//
+//		ArrayList<Individual> children = new ArrayList<>();
+//
+//		for (int i = 0; i < randomGenePoint; i++) {
+//			childGenes1[i] = this.getGenes()[i];
+//		}
+//
+//		for (int i = randomGenePoint; i < genes.length; i++) {
+//			childGenes1[i] = ((AbstractIndividual) partner).getGenes2().get(i);
+//		}
+//
+//		mutateGenes(childGenes1);
+//
+//		children.add(createChild(childGenes1));
+//		// children.add(createChild(childGenes2));
+//
+//		return children;
+//
+//	}
+	
 	public ArrayList<Individual> createChildren(Individual partner) {
 		int randomGenePoint = ThreadLocalRandom.current().nextInt(genes.length + 1);
 		int[] childGenes1 = new int[genes.length];
-		int[] childGenes2 = new int[genes.length];
+		// int[] childGenes2 = new int[genes.length];
 
 		ArrayList<Individual> children = new ArrayList<>();
 
 		for (int i = 0; i < randomGenePoint; i++) {
 			childGenes1[i] = this.getGenes()[i];
-			childGenes2[i] = ((AbstractIndividual) partner).getGenes()[i];
+			// childGenes2[i] = ((AbstractIndividual) partner).getGenes()[i];
 		}
 
 		for (int i = randomGenePoint; i < genes.length; i++) {
 			childGenes1[i] = ((AbstractIndividual) partner).getGenes()[i];
-			childGenes2[i] = this.getGenes()[i];
+			// childGenes2[i] = this.getGenes()[i];
 		}
 
 		mutateGenes(childGenes1);
-		mutateGenes(childGenes2);
+		// mutateGenes(childGenes2);
 
 		children.add(createChild(childGenes1));
-		children.add(createChild(childGenes2));
+		// children.add(createChild(childGenes2));
 
 		return children;
 
 	}
-	
+
 	protected abstract AbstractIndividual createChild(int[] genes);
 
 	protected abstract void mutateGenes(int[] genesToMutate);
@@ -82,12 +101,23 @@ public abstract class AbstractIndividual implements Individual {
 	public int[] getGenes() {
 		return genes;
 	}
+
 	public int getGeneSize() {
 		return geneArraySize;
 	}
 
 	public int getGeneArraySize() {
 		return geneArraySize;
+	}
+	
+	
+
+	public ArrayList<Object> getGenes2() {
+		return genes2;
+	}
+
+	public void setGenes2(ArrayList<Object> genes2) {
+		this.genes2 = genes2;
 	}
 
 	@Override

@@ -3,18 +3,12 @@ package com.ga.individuals;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
 import com.ga.data.Record;
 
 public class ClassificationIndividual extends AbstractIndividual {
-
+	
 	private int recordLength;
-	public static final int GENE_MAX_VALUE = 3;
-
-	@Autowired
-	@Qualifier("correctRecords")
+	private static final int GENE_MAX_VALUE = 3;	
 	ArrayList<Record> correctRecords;
 
 	public ClassificationIndividual(int geneArraySize, int recordLength) {
@@ -51,23 +45,16 @@ public class ClassificationIndividual extends AbstractIndividual {
 	public void calculateFitness() {
 		int newFitness = 0;
 		ArrayList<Record> records = genesToRecordArrayList();
-
 		for (Record correctRecord : correctRecords) {
-//			if (records.contains(correctRecord)) {
-//				newFitness++;
-//			}
-			for (Record record : records) {
-				
-				if (record.compareInputs(correctRecord) && record.getHashCount() <=3) {
-//					newFitness++;
-					if (record.compareOutputs(correctRecord)) {
+			for (Record rule : records) {
+				if (rule.compareInputs(correctRecord)) {
+					if (rule.compareOutputs(correctRecord)) {
 						newFitness++;
-						break;
 					}
+					break;
 				}
 			}
 		}
-		
 		fitness = newFitness;
 	}
 
@@ -78,15 +65,14 @@ public class ClassificationIndividual extends AbstractIndividual {
 	@Override
 	protected void mutateGenes(int[] genesToMutate) {
 		for (int i = 0; i < genesToMutate.length; i++) {
-			if (ThreadLocalRandom.current().nextInt(MUTATION_DIVIDER) <= MUTATION_RATE) {				
-				genesToMutate[i] = ThreadLocalRandom.current().nextInt(GENE_MAX_VALUE);
-//				genesToMutate[i] = randomNumberExcluding(GENE_MAX_VALUE,genesToMutate[i]);
+			if (ThreadLocalRandom.current().nextInt(MUTATION_DIVIDER) <= mutationRate) {				
+//				genesToMutate[i] = ThreadLocalRandom.current().nextInt(GENE_MAX_VALUE);
+				genesToMutate[i] = randomNumberExcluding(GENE_MAX_VALUE,genesToMutate[i]);
 			}
 		}
 	}
 	
 	// TODO: Needs to be made more efficient.
-	@SuppressWarnings("unused")
 	private int randomNumberExcluding(int upper,int exclude){
 		while (true) {
 			int nextInt = ThreadLocalRandom.current().nextInt(upper);
