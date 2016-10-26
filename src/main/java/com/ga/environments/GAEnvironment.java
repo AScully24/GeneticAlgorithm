@@ -35,7 +35,7 @@ public class GAEnvironment {
 		ArrayList<Individual> rouletteWheel = new ArrayList<Individual>();
 
 		for (Individual individual : popToCheck) {
-			long rouletteCount = (long) Math.ceil((individual.getFitness() / totalFitness) * 100);
+			long rouletteCount = (long) Math.round((individual.getFitness() / totalFitness) * 100);
 			for (int i = 0; i < rouletteCount; i++) {
 				rouletteWheel.add(individual);
 			}
@@ -44,11 +44,14 @@ public class GAEnvironment {
 	}
 
 	public void generateNewPopulation() {
-		Individual fittestIndividual = getFittestIndividual();
-//		population = selectionCrossover();
-		 ArrayList<Individual> offspring = selectionCrossover();
-		 population = selectionCompetition(offspring);
-		replaceWeakestWithElite(fittestIndividual, population);
+//		Individual fittestIndividual = getFittestIndividual();
+		
+		population = selectionCrossover();
+		
+//		 ArrayList<Individual> offspring = selectionCrossover();
+//		 population = selectionCompetition(offspring);
+		
+//		replaceWeakestWithElite(fittestIndividual, population);
 
 	}
 
@@ -62,8 +65,10 @@ public class GAEnvironment {
 //		 ArrayList<Individual> rouletteWheel = selectionCompetition(population);
 		ArrayList<Individual> offspring = new ArrayList<Individual>();
 		int populationSize = population.size();
+		
+		offspring.add(getFittestIndividual());
 
-		for (int i = 0; i < populationSize; i++) {
+		for (int i = 0; i < populationSize - 1; i++) {
 			Individual parent1 = selectRandomFromArrayList(rouletteWheel);
 			Individual parent2 = selectRandomFromArrayList(rouletteWheel);
 
@@ -98,16 +103,14 @@ public class GAEnvironment {
 			offspring.add(compareTwoIndividuals(parent1, parent2));
 		}
 
-		replaceWeakestWithElite(getFittestIndividual(), offspring);
-
 		return offspring;
 	}
 
-	private Individual compareTwoIndividuals(Individual one, Individual two) {
+	public static Individual compareTwoIndividuals(Individual one, Individual two) {
+		
 		if (one.getFitness() > two.getFitness()) {
 			return one;
 		}
-
 		return two;
 	}
 
@@ -161,25 +164,26 @@ public class GAEnvironment {
 		return fittestIndividual;
 	}
 
-	public void multipleRuns(int runCount) {
-		for (int i = 0; i < runCount; i++) {
-			multipleGenerations(runCount, runCount, targetFitness);
+	public ArrayList<RunResult> multipleRuns(int runLimit, int generationLimit) {
+		ArrayList<RunResult> runResults = new ArrayList<RunResult>();
+		for (int runCount = 1; runCount <= runLimit; runCount++) {
+			ArrayList<GenerationResult> generationResult = multipleGenerations(runLimit, generationLimit, targetFitness);
+			runResults.add(new RunResult(problemName, runCount, generationResult));
 		}
+		return runResults;
 	}
 
-	public Individual multipleGenerations(int runNumber, int generationCount, int targetFitness) {
-
+	public ArrayList<GenerationResult> multipleGenerations(int runNumber, int generationLimit, int targetFitness) {
+		ArrayList<GenerationResult> generationResults = new ArrayList<GenerationResult>();
 		Individual overallFittesIndividual = getFittestIndividual();
-		logger.info("Run_Number,Generation_Number,Max_Fitness,Average_Fitness,Solution_Found,Problem_name");
-		for (int generationNumber = 0; generationNumber < generationCount; generationNumber++) {
+//		logger.info("Run_Number,Generation_Number,Max_Fitness,Average_Fitness,Solution_Found,Problem_name");
+		for (int generationNumber = 1; generationNumber <= generationLimit; generationNumber++) {
 
 			generateNewPopulation();
 
 			Individual currentfittestsIndividual = getFittestIndividual();
 
-			// System.out.printf("%d,%d,%2f\n",
-			// i,currentfittestsIndividual.getFitness(),
-			// getCurrentPopulationAverageFitness());
+//			System.out.printf("%d,%d,%2f\n",generationNumber,currentfittestsIndividual.getFitness(),getCurrentPopulationAverageFitness());
 
 			if (currentfittestsIndividual.getFitness() > overallFittesIndividual.getFitness()) {
 				overallFittesIndividual = currentfittestsIndividual;
@@ -187,11 +191,18 @@ public class GAEnvironment {
 			boolean solutionFound = overallFittesIndividual.getFitness() == targetFitness;
 			logger.info("{},{},{},{},{},{}", runNumber, generationNumber, currentfittestsIndividual.getFitness(), getCurrentPopulationAverageFitness(), solutionFound, problemName);
 
+			GenerationResult generationResult = new GenerationResult(overallFittesIndividual, generationNumber, solutionFound);
+			generationResults.add(generationResult);
+			
+			// Stop creating new generations and return the fittest individual
 			if (solutionFound) {
-				return overallFittesIndividual;
+				return generationResults;
 			}
 		}
-		return overallFittesIndividual;
+		
+		GenerationResult generationResult = new GenerationResult(overallFittesIndividual, generationLimit, false);
+		generationResults.add(generationResult);
+		return generationResults;
 	}
 
 	@Override

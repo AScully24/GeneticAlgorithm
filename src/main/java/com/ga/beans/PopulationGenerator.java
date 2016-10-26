@@ -38,12 +38,12 @@ public class PopulationGenerator {
 	@Bean
 	public GAEnvironment simplePopulation() {
 		ArrayList<Individual> population = new ArrayList<Individual>();
-
+		populationSize = 50;
 		for (int i = 0; i < populationSize; i++) {
 			population.add(new SimpleIndividual(populationSize));
 		}
 
-		return new GAEnvironment(population, "Simple Population",32);
+		return new GAEnvironment(population, "Simple Population",50);
 	}
 
 	@Bean
@@ -61,6 +61,7 @@ public class PopulationGenerator {
 		int bitSize = 6;
 		ArrayList<Individual> population = new ArrayList<Individual>();
 		ArrayList<Record> myRecords = FileLoader.loadBitFileToArrayList("data1.txt", bitSize - 1);
+		populationSize = 100;
 		for (int i = 0; i < populationSize; i++) {
 			population.add(new ClassificationIndividual(bitSize * ruleCount, myRecords, bitSize));
 		}
@@ -70,6 +71,7 @@ public class PopulationGenerator {
 	@Bean
 	public GAEnvironment classificationSixBitPopulation() {
 		int bitSize = 7;
+		populationSize = 100;
 		ArrayList<Individual> population = new ArrayList<Individual>();
 		ArrayList<Record> myRecords = FileLoader.loadBitFileToArrayList("data2.txt", bitSize - 1);
 		for (int i = 0; i < populationSize; i++) {

@@ -1,9 +1,12 @@
 package com.ga;
 
+import java.util.ArrayList;
+
 import org.junit.Assert;
 import org.junit.Before;
 
 import com.ga.environments.GAEnvironment;
+import com.ga.environments.RunResult;
 import com.ga.individuals.Individual;
 
 public abstract class AbstractTestGAEnvironment {
@@ -25,13 +28,21 @@ public abstract class AbstractTestGAEnvironment {
 		}
 	}
 
-	public void runMultipleGenerations(int generationCount, int targetFitness, boolean checkResult) {
-		Individual fittestIndividual = gaEnv.multipleGenerations(1, generationCount, targetFitness);
+	public ArrayList<RunResult> runMultipleGenerations(int runLimit, int generationCount, int targetFitness, boolean checkResult) {
+		ArrayList<RunResult> runResults = gaEnv.multipleRuns(runLimit, generationCount);
+		Individual fittestIndividual = runResults.get(0).getFittestIndividualInRun();
+		
+		for (RunResult runResult : runResults) {
+			Individual currentIndividual = runResult.getFittestIndividualInRun();
+			fittestIndividual  = GAEnvironment.compareTwoIndividuals(fittestIndividual, currentIndividual);
+		}
+		
 		int maxFitness = fittestIndividual.getFitness();
 
 		if (checkResult) {
 			Assert.assertTrue(maxFitness == targetFitness);
 		}
+		return runResults;
 	}
 
 	public abstract void setGaEnv();

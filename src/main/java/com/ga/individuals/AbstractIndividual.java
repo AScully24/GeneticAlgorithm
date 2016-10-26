@@ -1,128 +1,76 @@
 package com.ga.individuals;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
+
+import com.ga.genes.Gene;
 
 public abstract class AbstractIndividual implements Individual {
 
-	// Maximum value of the Gene minus 1 E.g. GENE_MAX_VALUE=4 means that an
-	// individual gene can be a value between 0 and 3.
-	protected int[] genes;
-	protected ArrayList<Object> genes2;
+	protected ArrayList<Gene> genes;
 	protected int geneArraySize;
 	protected int fitness;
-//	protected int mutationRate;
+	
+	//TODO: Get this to set via a property value
+	protected int mutationRate=10;
 
-	public AbstractIndividual(int geneArraySize, int geneMaxValue) {
+	public AbstractIndividual(int geneArraySize) {
 		this.geneArraySize = geneArraySize;
-		genes = new int[geneArraySize];
-
-		for (int j = 0; j < genes.length; j++) {
-			genes[j] = ThreadLocalRandom.current().nextInt(geneMaxValue);
-		}
+		genes = createDefaultGenes();
 	}
 
-	public AbstractIndividual(int[] genes) {
+	public AbstractIndividual(ArrayList<Gene> genes) {
 		this.genes = genes;
-		this.geneArraySize = genes.length;
+		this.geneArraySize = genes.size();
 	}
 	
-//	public ArrayList<Individual> createChild(Individual partner, int ii){
-//		int randomGenePoint = ThreadLocalRandom.current().nextInt(genes.length + 1);
-//		ArrayList<Object> childGenes1 = new ArrayList<Object>();
-//
-//		ArrayList<Individual> children = new ArrayList<>();
-//
-//		for (int i = 0; i < randomGenePoint; i++) {
-//			childGenes1[i] = this.getGenes()[i];
-//		}
-//
-//		for (int i = randomGenePoint; i < genes.length; i++) {
-//			childGenes1[i] = ((AbstractIndividual) partner).getGenes2().get(i);
-//		}
-//
-//		mutateGenes(childGenes1);
-//
-//		children.add(createChild(childGenes1));
-//		// children.add(createChild(childGenes2));
-//
-//		return children;
-//
-//	}
-	
-	public ArrayList<Individual> createChildren(Individual partner) {
-		int randomGenePoint = ThreadLocalRandom.current().nextInt(genes.length + 1);
-		int[] childGenes1 = new int[genes.length];
-		// int[] childGenes2 = new int[genes.length];
+	public ArrayList<Individual> createChildren(Individual partner){
+		int randomGenePoint = ThreadLocalRandom.current().nextInt(genes.size() + 1);
+		ArrayList<Gene> childGenes = new ArrayList<Gene>();
 
 		ArrayList<Individual> children = new ArrayList<>();
 
 		for (int i = 0; i < randomGenePoint; i++) {
-			childGenes1[i] = this.getGenes()[i];
-			// childGenes2[i] = ((AbstractIndividual) partner).getGenes()[i];
+			childGenes.add(this.genes.get(i).copyGene());
 		}
 
-		for (int i = randomGenePoint; i < genes.length; i++) {
-			childGenes1[i] = ((AbstractIndividual) partner).getGenes()[i];
-			// childGenes2[i] = this.getGenes()[i];
+		for (int i = randomGenePoint; i < genes.size(); i++) {
+			Gene gene = ((AbstractIndividual) partner).getGenes().get(i);
+			childGenes.add(gene.copyGene());
 		}
 
-		mutateGenes(childGenes1);
-		// mutateGenes(childGenes2);
+		mutateGenes(childGenes);
 
-		children.add(createChild(childGenes1));
-		// children.add(createChild(childGenes2));
-
+		children.add(createChild(childGenes));
+		
 		return children;
 
 	}
+	
+	protected abstract Individual createChild(ArrayList<Gene> childGenes);
 
-	protected abstract AbstractIndividual createChild(int[] genes);
-
-	protected abstract void mutateGenes(int[] genesToMutate);
-
+	protected abstract void mutateGenes(ArrayList<Gene> childGenes);
+	
 	/**
 	 * Loops through gene array and updates the individual's fitness
 	 */
 	protected abstract void calculateFitness();
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ga.individuals.Individual#getFitness()
-	 */
+	
+	protected abstract ArrayList<Gene>createDefaultGenes();
+	
 	@Override
 	public int getFitness() {
 		calculateFitness();
 		return fitness;
 	}
-
-	public int[] getGenes() {
+		
+	public ArrayList<Gene> getGenes() {
 		return genes;
-	}
-
-	public int getGeneSize() {
-		return geneArraySize;
-	}
-
-	public int getGeneArraySize() {
-		return geneArraySize;
-	}
-	
-	
-
-	public ArrayList<Object> getGenes2() {
-		return genes2;
-	}
-
-	public void setGenes2(ArrayList<Object> genes2) {
-		this.genes2 = genes2;
 	}
 
 	@Override
 	public String toString() {
-		return "Individual [genes=" + Arrays.toString(genes) + ", fitness=" + getFitness() + "]";
+		return "AbstractIndividual [genes=" + genes + ", geneArraySize=" + geneArraySize + ", fitness=" + getFitness() + "]";
 	}
 
 }

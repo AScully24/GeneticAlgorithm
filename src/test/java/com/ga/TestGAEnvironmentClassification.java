@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ga.data.Record;
 import com.ga.environments.GAEnvironment;
+import com.ga.environments.RunResult;
 import com.ga.individuals.ClassificationIndividual;
 import com.ga.individuals.Individual;
 
@@ -30,7 +31,20 @@ public class TestGAEnvironmentClassification extends AbstractTestGAEnvironment{
 
 	@Test
 	public void testMultipleGenerations() {
-		runMultipleGenerations(100000, customEnv.getTargetFitness(),false);
+		ArrayList<RunResult> runResults = runMultipleGenerations(1, 100000,customEnv.getTargetFitness(), false);
+		System.out.println(runResults);
+		Individual fittestsIndividual = gaEnv.getFittestIndividual();
+		ArrayList<Record> fittestRecords = ((ClassificationIndividual)fittestsIndividual).genesToRecordArrayList();
+		
+		for (Record record : fittestRecords) {
+			System.out.println(record);
+		}
+		Assert.assertTrue(gaEnv.getFittestIndividual().getFitness() == customEnv.getTargetFitness());
+	}
+	
+	@Test
+	public void testMultipleRuns() {
+		runMultipleGenerations(1, 100000,customEnv.getTargetFitness(), false);
 		Individual fittestsIndividual = gaEnv.getFittestIndividual();
 		ArrayList<Record> fittestRecords = ((ClassificationIndividual)fittestsIndividual).genesToRecordArrayList();
 		

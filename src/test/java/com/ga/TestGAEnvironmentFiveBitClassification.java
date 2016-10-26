@@ -31,7 +31,7 @@ public class TestGAEnvironmentFiveBitClassification extends AbstractTestGAEnviro
 	@Test
 	public void testMultipleGenerations() {
 		int targetFitness = 10;
-		runMultipleGenerations(100000, targetFitness,false);
+		runMultipleGenerations(1, 100000,targetFitness, false);
 		
 		Individual fittestsIndividual = gaEnv.getFittestIndividual();
 		ArrayList<Record> fittestRecords = ((ClassificationIndividual)fittestsIndividual).genesToRecordArrayList();
