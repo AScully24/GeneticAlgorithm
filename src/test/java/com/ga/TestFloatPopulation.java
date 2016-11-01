@@ -11,19 +11,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ga.data.BinaryRecord;
+import com.ga.data.FloatingRecord;
 import com.ga.data.Record;
 import com.ga.environments.GAEnvironment;
-import com.ga.environments.GenerationResult;
 import com.ga.environments.RunResult;
 import com.ga.individuals.ClassificationIndividual;
+import com.ga.individuals.FloatingIndividual;
 import com.ga.individuals.Individual;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TestGAEnvironmentClassification extends AbstractTestGAEnvironment {
+public class TestFloatPopulation extends AbstractTestGAEnvironment{
 
 	@Autowired
-	@Qualifier("classificationPopulation")
+	@Qualifier("floatingPopulation")
 	GAEnvironment customEnv;
 
 	@Test
@@ -47,21 +48,43 @@ public class TestGAEnvironmentClassification extends AbstractTestGAEnvironment {
 
 	@Test
 	public void testMultipleRuns() {
-		ArrayList<RunResult> runResults = runMultipleGenerations(20, 10000, customEnv.getTargetFitness(), false);
+		ArrayList<RunResult> runResults = runMultipleGenerations(10, 10000, customEnv.getTargetFitness(), false);
 
 		Individual fittestsIndividual = runResults.get(0).getFittestIndividualInRun();
-		for (RunResult runResult : runResults) {
-			System.out.println(runResult.toString());
-			for (GenerationResult generationResult : runResult.getGenerationResults()) {
-				System.out.println(runResult.toString() + "," + generationResult.toString());
-			}
-		}
-
 		ArrayList<BinaryRecord> fittestRecords = ((ClassificationIndividual) fittestsIndividual).genesToRecordArrayList();
+
+		// for (RunResult runResult : runResults) {
+		// System.out.println(runResult.toString());
+		// for (GenerationResult generationResult : runResult.getGenerationResults()) {
+		// System.out.println(runResult.toString() + "," + generationResult.toString());
+		// }
+		// }
+
 		for (Record record : fittestRecords) {
 			System.out.println(record);
 		}
 		Assert.assertTrue(fittestsIndividual.getFitness() == customEnv.getTargetFitness());
+	}
+	
+	@Test
+	public void testFittestIndividual(){
+		ArrayList<RunResult> runResults = runMultipleGenerations(1, 10000, customEnv.getTargetFitness(), false);
+
+		FloatingIndividual fittestsIndividual = (FloatingIndividual) runResults.get(0).getFittestIndividualInRun();
+		ArrayList<FloatingRecord> testRecords = FileLoader.loadBitFileToArrayListFloat("float-data.txt", 6);
+		int score = 0;
+		for (FloatingRecord record : testRecords) {
+			int targetOutput = record.getOutput();
+			int indOutput = fittestsIndividual.catergoriseFloatingRecord(record);
+			if (targetOutput == indOutput) {
+				
+				score++;
+			}
+//			System.out.println(targetOutput + "," + indOutput);
+		}
+		
+		System.out.printf("Target Correct: %d\nActual Correct: %d\nPerc Correct: %d\n",testRecords.size(),score,(score/testRecords.size() * 100));
+		
 	}
 
 	@Override

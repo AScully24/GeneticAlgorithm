@@ -3,17 +3,17 @@ package com.ga;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ga.beans.PopulationGenerator;
+import com.ga.beans.GAEnvironmentGenerator;
 import com.ga.environments.GAEnvironment;
 
 public class TestGAEnvironmentSimple extends AbstractTestGAEnvironment{
 
 	GAEnvironment customEnv;
-	PopulationGenerator eb;
+	GAEnvironmentGenerator eb;
 	
 	@Before
 	public void init() {
-		eb = new PopulationGenerator();
+		eb = new GAEnvironmentGenerator();
 		gaEnv = eb.simplePopulation();
 	}
 

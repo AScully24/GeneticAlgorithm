@@ -11,4 +11,8 @@ public interface Individual {
 	public ArrayList<Individual> createChildren(Individual partner);
 
 	public int getFitness();
+	
+	public void setMutationRate(int mutationRate);
+	
+	public int getMutationRate();
 }

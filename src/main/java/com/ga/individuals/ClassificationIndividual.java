@@ -3,6 +3,7 @@ package com.ga.individuals;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.ga.data.BinaryRecord;
 import com.ga.data.Record;
 import com.ga.genes.BinaryGene;
 import com.ga.genes.Gene;
@@ -11,25 +12,15 @@ public class ClassificationIndividual extends AbstractIndividual {
 	
 	private int recordLength;
 	private static final int GENE_MAX_VALUE = 3;
-	ArrayList<Record> correctRecords;
-
-//	public ClassificationIndividual(int geneArraySize, int recordLength) {
-//		super(geneArraySize);
-//		this.recordLength = recordLength;
-//	}
-
-//	public ClassificationIndividual(ArrayList<Gene> genes, int recordLength) {
-//		super(genes);
-//		this.recordLength = recordLength;
-//	}
-
-	public ClassificationIndividual(int geneArraySize, ArrayList<Record> correctRecords, int recordLength) {
+	ArrayList<BinaryRecord> correctRecords;
+	
+	public ClassificationIndividual(int geneArraySize, ArrayList<BinaryRecord> correctRecords, int recordLength) {
 		super(geneArraySize);
 		this.recordLength = recordLength;
 		this.correctRecords = correctRecords;
 	}
 
-	public ClassificationIndividual(ArrayList<Gene> genes, ArrayList<Record> correctRecords, int recordLength) {
+	public ClassificationIndividual(ArrayList<Gene> genes, ArrayList<BinaryRecord> correctRecords, int recordLength) {
 		super(genes);
 		this.recordLength = recordLength;
 		this.correctRecords = correctRecords;
@@ -47,8 +38,8 @@ public class ClassificationIndividual extends AbstractIndividual {
 	@Override
 	public void calculateFitness() {
 		int newFitness = 0;
-		ArrayList<Record> records = genesToRecordArrayList();
-		for (Record correctRecord : correctRecords) {
+		ArrayList<BinaryRecord> records = genesToRecordArrayList();
+		for (BinaryRecord correctRecord : correctRecords) {
 			for (Record rule : records) {
 				if (rule.compareInputs(correctRecord)) {
 					if (rule.compareOutputs(correctRecord)) {
@@ -84,8 +75,8 @@ public class ClassificationIndividual extends AbstractIndividual {
 		
 	}
 
-	public ArrayList<Record> genesToRecordArrayList() {
-		ArrayList<Record> records = new ArrayList<Record>();
+	public ArrayList<BinaryRecord> genesToRecordArrayList() {
+		ArrayList<BinaryRecord> records = new ArrayList<BinaryRecord>();
 		for (int i = 0; i < genes.size(); i += recordLength) {
 			
 			int[] input = new int[recordLength - 1];
@@ -95,7 +86,7 @@ public class ClassificationIndividual extends AbstractIndividual {
 			
 			int output = ((BinaryGene) genes.get(i + recordLength - 1)).getValue();
 			
-			Record newRecord = new Record();
+			BinaryRecord newRecord = new BinaryRecord();
 			newRecord.setInput(input);
 			newRecord.setOutput(output);
 			records.add(newRecord);
@@ -107,4 +98,10 @@ public class ClassificationIndividual extends AbstractIndividual {
 	protected Individual createChild(ArrayList<Gene> genes) {
 		return new ClassificationIndividual(genes, correctRecords,recordLength);
 	}
+
+	public void setCorrectRecords(ArrayList<BinaryRecord> correctRecords) {
+		this.correctRecords = correctRecords;
+	}
+	
+	
 }

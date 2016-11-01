@@ -8,9 +8,9 @@ import org.junit.Before;
 import com.ga.environments.GAEnvironment;
 import com.ga.environments.RunResult;
 import com.ga.individuals.Individual;
+import com.ga.populations.ClassificationPopulation;
 
 public abstract class AbstractTestGAEnvironment {
-
 
 	protected GAEnvironment gaEnv;
 
@@ -20,11 +20,11 @@ public abstract class AbstractTestGAEnvironment {
 	}
 	
 	public void runInitalCreation(boolean checkResult) {
-		for (Individual individual : gaEnv.getPopulation()) {
+		for (Individual individual : gaEnv.getPopulation().getCurrentPopulation()) {
 			System.out.println(individual.toString());
 		}
 		if (checkResult) {
-			Assert.assertTrue(gaEnv.getPopulation().size() > 0);
+			Assert.assertTrue(gaEnv.getPopulation().getCurrentPopulation().size() > 0);
 		}
 	}
 
@@ -34,7 +34,7 @@ public abstract class AbstractTestGAEnvironment {
 		
 		for (RunResult runResult : runResults) {
 			Individual currentIndividual = runResult.getFittestIndividualInRun();
-			fittestIndividual  = GAEnvironment.compareTwoIndividuals(fittestIndividual, currentIndividual);
+			fittestIndividual  = ClassificationPopulation.compareTwoIndividuals(fittestIndividual, currentIndividual);
 		}
 		
 		int maxFitness = fittestIndividual.getFitness();

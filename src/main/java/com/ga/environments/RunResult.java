@@ -3,6 +3,7 @@ package com.ga.environments;
 import java.util.ArrayList;
 
 import com.ga.individuals.Individual;
+import com.ga.populations.ClassificationPopulation;
 
 public class RunResult {
 	String problemName;
@@ -20,9 +21,35 @@ public class RunResult {
 		
 		for (GenerationResult generationResult : generationResults) {
 			Individual currentIndividual = generationResult.getFittestIndividual();
-			fittestIndividual = GAEnvironment.compareTwoIndividuals(fittestIndividual, currentIndividual);
+			fittestIndividual = ClassificationPopulation.compareTwoIndividuals(fittestIndividual, currentIndividual);
 		}
 		
 		return fittestIndividual;
 	}
+	
+	public GenerationResult getMostRecentGeneration(){
+		GenerationResult returnGen = null;
+		for (GenerationResult generationResult : generationResults) {
+			if (generationResult.isLastGeneration()) {
+				returnGen = generationResult;
+			}
+		}
+		return returnGen;
+	}
+	
+	
+
+	public ArrayList<GenerationResult> getGenerationResults() {
+		return generationResults;
+	}
+
+	public void setGenerationResults(ArrayList<GenerationResult> generationResults) {
+		this.generationResults = generationResults;
+	}
+
+	@Override
+	public String toString() {
+		return problemName + "," + runNumber + "," + getMostRecentGeneration();
+	}
+	
 }
