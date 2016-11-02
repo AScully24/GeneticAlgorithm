@@ -36,7 +36,7 @@ public class ClassificationIndividual extends AbstractIndividual {
 	}
 
 	@Override
-	public void calculateFitness() {
+	public int calculateFitness() {
 		int newFitness = 0;
 		ArrayList<BinaryRecord> records = genesToRecordArrayList();
 		for (BinaryRecord correctRecord : correctRecords) {
@@ -49,7 +49,7 @@ public class ClassificationIndividual extends AbstractIndividual {
 				}
 			}
 		}
-		fitness = newFitness;
+		return newFitness;
 	}
 	
 	// TODO: Needs to be made more efficient.

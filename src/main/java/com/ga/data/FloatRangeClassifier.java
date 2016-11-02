@@ -1,21 +1,39 @@
-package com.ga.genes;
+package com.ga.data;
 
 import java.util.ArrayList;
+
+import org.apache.commons.lang.math.FloatRange;
 
 /**
  * @author user_pc
  *
  */
-public class FloatingGene implements Gene {
+public class FloatRangeClassifier{
 	ArrayList<Float> lower;
 	ArrayList<Float> upper;
 	int output;
-
-	public FloatingGene(ArrayList<Float> lower, ArrayList<Float> upper, int output) {
+	
+	
+	
+	public FloatRangeClassifier() {
 		super();
+		lower = new ArrayList<Float>();
+		upper = new ArrayList<Float>();
+
+	}
+
+	public FloatRangeClassifier(ArrayList<Float> lower, ArrayList<Float> upper, int output) {
 		this.lower = lower;
 		this.upper = upper;
 		this.output = output;
+	}
+	
+	public void addLower(Float value){
+		lower.add(value);
+	}
+	
+	public void addUpper(Float value){
+		upper.add(value);
 	}
 	
 	public boolean inputsWithingRange(ArrayList<Float> input){
@@ -24,18 +42,30 @@ public class FloatingGene implements Gene {
 			Float value = input.get(i);
 			Float lowerTarget = lower.get(i);
 			Float upperTarget = upper.get(i);
-		
-			if (value < lowerTarget) {
+			
+			FloatRange range = new FloatRange(lowerTarget,upperTarget);
+			if (!range.containsFloat(value)) {
 				return false;
 			}
-			if (value > upperTarget) {
-				return false;
-			}
-//			if (!(value > lowerTarget) && !(value < upperTarget)) {
-//				return false;
-//			}
+			
 		}
 		return true;
+	}
+	
+	public int inputRangeCount(ArrayList<Float> input){
+		int numberOfMatches = 0;
+		for (int i = 0; i < input.size(); i++) {
+			Float value = input.get(i);
+			Float lowerTarget = lower.get(i);
+			Float upperTarget = upper.get(i);
+			
+			FloatRange range = new FloatRange(lowerTarget,upperTarget);
+			if (range.containsFloat(value)) {
+				numberOfMatches++;
+			}
+			
+		}
+		return numberOfMatches;
 	}
 	
 	public ArrayList<Float> getLower() {
@@ -60,11 +90,6 @@ public class FloatingGene implements Gene {
 
 	public void setOutput(int output) {
 		this.output = output;
-	}
-
-	@Override
-	public Gene copyGene() {
-		return new FloatingGene(lower, upper, output);
 	}
 
 	@Override

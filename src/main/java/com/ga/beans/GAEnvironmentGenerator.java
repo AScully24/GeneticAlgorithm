@@ -7,11 +7,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.ga.FileLoader;
-import com.ga.data.BinaryRecord;
+import com.ga.data.FloatingRecord;
 import com.ga.environments.GAEnvironment;
 import com.ga.individuals.Individual;
 import com.ga.individuals.SimpleIndividual;
 import com.ga.populations.ClassificationPopulation;
+import com.ga.populations.FloatingPopulation;
 import com.ga.populations.Population;
 
 @Configuration
@@ -49,17 +50,18 @@ public class GAEnvironmentGenerator {
 		return new GAEnvironment(population, "Simple Population",50);
 	}
 
-	@Bean
-	public GAEnvironment classificationPopulation() {
-		ArrayList<BinaryRecord> trainingRecords = FileLoader.loadBitFileToArrayList(fileName, bitInput - 1);
-		Population population = new ClassificationPopulation(ruleCount, bitInput, populationSize, mutationRate, trainingRecords);
-		return new GAEnvironment(population, problemName,trainingRecords.size());
-	}
-	
+	//TODO: Allow loading of both classification and float populations
 //	@Bean
-//	public GAEnvironment floatingPopulation() {
-//		ArrayList<FloatingRecord> trainingRecords = FileLoader.loadBitFileToArrayListFloat("data3.txt", 6);
-//		FloatingPopulation population = new FloatingPopulation(ruleCount, populationSize, mutationRate, trainingRecords);
+//	public GAEnvironment classificationPopulation() {
+//		ArrayList<BinaryRecord> trainingRecords = FileLoader.loadBitFileToArrayList(fileName, bitInput - 1);
+//		Population population = new ClassificationPopulation(ruleCount, bitInput, populationSize, mutationRate, trainingRecords);
 //		return new GAEnvironment(population, problemName,trainingRecords.size());
 //	}
+	
+	@Bean
+	public GAEnvironment floatingPopulation() {
+		ArrayList<FloatingRecord> trainingRecords = FileLoader.loadBitFileToArrayListFloat("data3.txt", 6);
+		FloatingPopulation population = new FloatingPopulation(ruleCount * 13, populationSize, mutationRate, trainingRecords);
+		return new GAEnvironment(population, problemName,trainingRecords.size());
+	}
 }

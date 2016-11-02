@@ -7,6 +7,7 @@ import com.ga.individuals.Individual;
 public abstract class AbstractPopulation implements Population {
 
 	protected ArrayList<Individual> currentPopulation;
+	// TODO: Change this name to represent the gene count instead of rule count.
 	protected int ruleCount;
 	protected int populationSize;
 	int mutationRate;

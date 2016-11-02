@@ -3,36 +3,36 @@
 	<!-- Include any default spring log settings -->
 	<!-- <include resource="org/springframework/boot/logging/logback/defaults.xml" /> -->
 	<!-- Set the location of the log file -->
-	<property name="LOG_FILE"
-		value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}" />
+	<property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}"/>
 
 	<!-- Load default appender, but changes the settins on file. -->
-	<!-- <include resource="org/springframework/boot/logging/logback/file-appender.xml" 
-		/> -->
-	<!-- <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> 
-		Log message format <encoder> <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level 
-		%logger{36} - %msg%n </pattern> <pattern>%d{dd/MM/yy HH:mm:ss}-%msg%n </pattern> 
-		</encoder> </appender> -->
+	<!-- <include resource="org/springframework/boot/logging/logback/file-appender.xml" /> -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		Log message format
+		<encoder>
+			<!-- <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level
+				%logger{36} - %msg%n </pattern> -->
+			<pattern>%msg%n </pattern>
+		</encoder>
+	</appender>
 
-	<appender name="FILE"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<encoder>
 			<pattern>%d{dd/MM/yy HH:mm:ss}-%msg%n </pattern>
 		</encoder>
-		
+
 		<file>${LOG_FILE}</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 			<fileNamePattern>${LOG_FILE}.%i</fileNamePattern>
 		</rollingPolicy>
-		<triggeringPolicy
-			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
 			<MaxFileSize>10MB</MaxFileSize>
 		</triggeringPolicy>
 	</appender>
 
 	<!-- Setting the root level of logging to INFO -->
 	<root level="info">
-		<!-- <appender-ref ref="STDOUT" /> -->
-		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" /> 
+		<!-- <appender-ref ref="FILE"/> -->
 	</root>
 </configuration>

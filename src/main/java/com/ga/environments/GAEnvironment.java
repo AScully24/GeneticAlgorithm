@@ -5,7 +5,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.ga.individuals.Individual;
 import com.ga.populations.AbstractPopulation;
@@ -23,9 +22,6 @@ public class GAEnvironment {
 
 	String problemName;
 	int targetFitness;
-
-	@Value("${mutation-rate}")
-	private int mutationRate;
 
 	public GAEnvironment(Population population, String problemName, int targetFitness) {
 		this.population= population;
@@ -68,8 +64,8 @@ public class GAEnvironment {
 	 * @return Offspring of the current population.
 	 */
 	private ArrayList<Individual> selectionCrossover() {
-//		ArrayList<Individual> rouletteWheel = createRouletteWheel(population.getCurrentPopulation());
-		 ArrayList<Individual> rouletteWheel = selectionCompetition(population.getCurrentPopulation());
+		ArrayList<Individual> rouletteWheel = createRouletteWheel(population.getCurrentPopulation());
+//		 ArrayList<Individual> rouletteWheel = selectionCompetition(population.getCurrentPopulation());
 		ArrayList<Individual> offspring = new ArrayList<Individual>();
 		int populationSize = population.getCurrentPopulation().size();
 		

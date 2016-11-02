@@ -75,13 +75,14 @@ public class SimpleIndividual extends AbstractIndividual {
 	 * Loops through gene array and updates the individual's fitness
 	 */
 	@Override
-	public void calculateFitness() {
-		fitness = 0;
+	public int calculateFitness() {
+		int newFitness = 0;
 		for (Gene gene : genes) {
 			if (((BinaryGene) gene).getValue() == 1) {
-				fitness++;
+				newFitness++;
 			}
 		}
+		return newFitness;
 	}
 	
 	@Override

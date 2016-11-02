@@ -9,10 +9,7 @@ public abstract class AbstractIndividual implements Individual {
 
 	protected ArrayList<Gene> genes;
 	protected int geneArraySize;
-	protected int fitness;
-
-	// TODO: Get this to set via a property value
-	// @Value("${mutation-rate}")
+//	protected int fitness;
 	protected int mutationRate;
 
 	public AbstractIndividual(int geneArraySize) {
@@ -68,14 +65,13 @@ public abstract class AbstractIndividual implements Individual {
 	/**
 	 * Loops through gene array and updates the individual's fitness
 	 */
-	protected abstract void calculateFitness();
+	protected abstract int calculateFitness();
 
 	protected abstract ArrayList<Gene> createDefaultGenes();
 
 	@Override
 	public int getFitness() {
-		calculateFitness();
-		return fitness;
+		return calculateFitness();
 	}
 
 	public ArrayList<Gene> getGenes() {
