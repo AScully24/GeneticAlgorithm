@@ -28,19 +28,18 @@ public abstract class AbstractIndividual implements Individual {
 		ArrayList<Individual> children = new ArrayList<>();
 		
 		ArrayList<Gene> childGenes1 = crossoverGenes(this, partner, randomGenePoint);
-		ArrayList<Gene> childGenes2 = crossoverGenes(partner,this, randomGenePoint);
-		
 		mutateGenes(childGenes1);
-		mutateGenes(childGenes2);
-
 		Individual child1 = createChild(childGenes1);
 		child1.setMutationRate(mutationRate);
 		children.add(child1);
-
+		
+//		ArrayList<Gene> childGenes2 = crossoverGenes(partner,this, randomGenePoint);
+//		mutateGenes(childGenes2);
 //		Individual child2 = createChild(childGenes1);
 //		child2.setMutationRate(mutationRate);
 //		children.add(child2);
-//		
+
+
 		return children;
 
 	}

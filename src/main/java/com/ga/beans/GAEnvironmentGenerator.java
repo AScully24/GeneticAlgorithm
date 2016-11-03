@@ -2,66 +2,47 @@ package com.ga.beans;
 
 import java.util.ArrayList;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import com.ga.FileLoader;
-import com.ga.data.FloatingRecord;
 import com.ga.environments.GAEnvironment;
 import com.ga.individuals.Individual;
 import com.ga.individuals.SimpleIndividual;
 import com.ga.populations.ClassificationPopulation;
-import com.ga.populations.FloatingPopulation;
+import com.ga.populations.FloatPopulation;
 import com.ga.populations.Population;
 
 @Configuration
+@ComponentScan("com.ga.populations")
 public class GAEnvironmentGenerator {
 
-	@Value("${problem-name}")
-	String problemName;
-	
-	@Value("${file-name}")
-	String fileName;
-	
-	@Value("${rule-count}")
-	int ruleCount;
-	
-	@Value("${bit-input}")
-	int bitInput;
-	
-	@Value("${population-size}")
-	int populationSize;
-	
-//	@Value("${target-fitness}")
-//	int targetFitness;
+	@Autowired
+	FloatPopulation floatPopulation;
 
-	@Value("${mutation-rate}")
-	int mutationRate;
-	
+	@Autowired
+	ClassificationPopulation classificationPopulation;
+
 	@Bean
-	public GAEnvironment simplePopulation() {		
+	public GAEnvironment simplePopulation() {
 		ArrayList<Individual> populationArray = new ArrayList<Individual>();
-		populationSize = 50;
+		int populationSize = 50;
 		for (int i = 0; i < populationSize; i++) {
 			populationArray.add(new SimpleIndividual(populationSize));
 		}
-		Population population = new ClassificationPopulation(populationArray, mutationRate);
-		return new GAEnvironment(population, "Simple Population",50);
+		Population population = new ClassificationPopulation(populationArray, 10);
+		return new GAEnvironment(population, "Simple Population", 50);
 	}
 
-	//TODO: Allow loading of both classification and float populations
-//	@Bean
-//	public GAEnvironment classificationPopulation() {
-//		ArrayList<BinaryRecord> trainingRecords = FileLoader.loadBitFileToArrayList(fileName, bitInput - 1);
-//		Population population = new ClassificationPopulation(ruleCount, bitInput, populationSize, mutationRate, trainingRecords);
-//		return new GAEnvironment(population, problemName,trainingRecords.size());
-//	}
-	
+	// TODO: Allow loading of both classification and float populations
 	@Bean
-	public GAEnvironment floatingPopulation() {
-		ArrayList<FloatingRecord> trainingRecords = FileLoader.loadBitFileToArrayListFloat("data3.txt", 6);
-		FloatingPopulation population = new FloatingPopulation(ruleCount * 13, populationSize, mutationRate, trainingRecords);
-		return new GAEnvironment(population, problemName,trainingRecords.size());
+	public GAEnvironment binaryGAEnvironment() {
+		return new GAEnvironment(classificationPopulation, classificationPopulation.getProblemName(), classificationPopulation.getTrainingRecords().size());
+	}
+
+	@Bean
+	public GAEnvironment floatGAEnvironment() {
+		return new GAEnvironment(floatPopulation, floatPopulation.getProblemName(), floatPopulation.getTrainingRecords().size());
 	}
 }

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import com.ga.data.BinaryRecord;
-import com.ga.data.FloatingRecord;
+import com.ga.data.FloatRecord;
 
 public class FileLoader {
 	
@@ -42,8 +42,8 @@ public class FileLoader {
 		return records;
 	}
 	
-	public static ArrayList<FloatingRecord> loadBitFileToArrayListFloat(String fileLocation, int inputSize) {
-		ArrayList<FloatingRecord> records = new ArrayList<>();
+	public static ArrayList<FloatRecord> loadBitFileToArrayListFloat(String fileLocation, int inputSize) {
+		ArrayList<FloatRecord> records = new ArrayList<>();
 		File file = new File(fileLocation);
 		
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -51,7 +51,7 @@ public class FileLoader {
 
 			while ((line = br.readLine()) != null) {
 				String[] split = line.split(" ");
-				FloatingRecord newRecord = new FloatingRecord();
+				FloatRecord newRecord = new FloatRecord();
 				
 				ArrayList<Float> input = new ArrayList<Float>();
 				for (int i = 0; i < inputSize; i++) {

@@ -1,0 +1,20 @@
+logging:
+    file: genetic-algorithm.log
+    level:
+        org:
+            hibernate: ERROR
+            springframework:
+                web: ERROR
+        root: INFO
+
+#Problem Settings
+bit-input: 7
+file-name: data3.txt
+mutation-rate: 100
+population-size: 200
+problem-name: Float Population
+rule-count: 10
+
+test:
+    myInt: 12
+    myString: hello

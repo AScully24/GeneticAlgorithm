@@ -2,7 +2,7 @@ package com.ga.data;
 
 import java.util.ArrayList;
 
-public class FloatingRecord extends AbstractRecord {
+public class FloatRecord extends AbstractRecord {
 	ArrayList<Float> input;
 	int output;
 

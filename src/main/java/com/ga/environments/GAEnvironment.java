@@ -46,15 +46,15 @@ public class GAEnvironment {
 	}
 
 	public void generateNewPopulation() {
-//		Individual fittestIndividual = population.getFittestIndividual();
+		Individual fittestIndividual = population.getFittestIndividual();
 		
 		population.setCurrentPopulation(selectionCrossover());
 		
 //		 ArrayList<Individual> offspring = selectionCrossover();
 //		 population.setCurrentPopulation(selectionCompetition(offspring));
 
-//		ArrayList<Individual> newPop = replaceWeakestWithElite(fittestIndividual, population.getCurrentPopulation());
-//		population.setCurrentPopulation(newPop);
+		ArrayList<Individual> newPop = replaceWeakestWithElite(fittestIndividual, population.getCurrentPopulation());
+		population.setCurrentPopulation(newPop);
 
 	}
 
@@ -64,14 +64,14 @@ public class GAEnvironment {
 	 * @return Offspring of the current population.
 	 */
 	private ArrayList<Individual> selectionCrossover() {
-		ArrayList<Individual> rouletteWheel = createRouletteWheel(population.getCurrentPopulation());
-//		 ArrayList<Individual> rouletteWheel = selectionCompetition(population.getCurrentPopulation());
+//		ArrayList<Individual> rouletteWheel = createRouletteWheel(population.getCurrentPopulation());
+		 ArrayList<Individual> rouletteWheel = selectionCompetition(population.getCurrentPopulation());
 		ArrayList<Individual> offspring = new ArrayList<Individual>();
 		int populationSize = population.getCurrentPopulation().size();
 		
-		offspring.add(population.getFittestIndividual());
+//		offspring.add(population.getFittestIndividual());
 
-		for (int i = 0; i < populationSize - 1; i++) {
+		for (int i = 0; i < populationSize; i++) {
 			Individual parent1 = selectRandomFromArrayList(rouletteWheel);
 			Individual parent2 = selectRandomFromArrayList(rouletteWheel);
 
@@ -153,9 +153,7 @@ public class GAEnvironment {
 			generateNewPopulation();
 
 			Individual currentfittestsIndividual = population.getFittestIndividual();
-
-
-			if (currentfittestsIndividual.getFitness() > overallFittesIndividual.getFitness()) {
+			if (currentfittestsIndividual.getFitness() >= overallFittesIndividual.getFitness()) {
 				overallFittesIndividual = currentfittestsIndividual;
 			}
 			boolean solutionFound = overallFittesIndividual.getFitness() == targetFitness;

@@ -8,13 +8,18 @@ public abstract class AbstractPopulation implements Population {
 
 	protected ArrayList<Individual> currentPopulation;
 	// TODO: Change this name to represent the gene count instead of rule count.
-	protected int ruleCount;
+	protected String problemName;
+	protected int geneSize;
 	protected int populationSize;
-	int mutationRate;
+	protected int mutationRate;
 
-	public AbstractPopulation(int ruleCount,int populationSize, int mutationRate) {
+	public AbstractPopulation() {
 		super();
-		this.ruleCount = ruleCount;
+	}
+
+	public AbstractPopulation(int ruleCount, int populationSize, int mutationRate) {
+		super();
+		this.geneSize = ruleCount;
 		this.populationSize = populationSize;
 		this.mutationRate = mutationRate;
 	}
@@ -76,4 +81,39 @@ public abstract class AbstractPopulation implements Population {
 	public void setCurrentPopulation(ArrayList<Individual> population) {
 		this.currentPopulation = population;
 	}
+
+	
+	
+	public int getGeneSize() {
+		return geneSize;
+	}
+
+	public void setGeneSize(int geneSize) {
+		this.geneSize = geneSize;
+	}
+
+	public int getPopulationSize() {
+		return populationSize;
+	}
+
+	public void setPopulationSize(int populationSize) {
+		this.populationSize = populationSize;
+	}
+
+	public int getMutationRate() {
+		return mutationRate;
+	}
+
+	public void setMutationRate(int mutationRate) {
+		this.mutationRate = mutationRate;
+	}
+
+	public String getProblemName() {
+		return problemName;
+	}
+
+	public void setProblemName(String problemName) {
+		this.problemName = problemName;
+	}
+
 }

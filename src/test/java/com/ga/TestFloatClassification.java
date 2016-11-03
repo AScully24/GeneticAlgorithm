@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.ga.data.FloatingRecord;
+import com.ga.data.FloatRecord;
 import com.ga.environments.GAEnvironment;
 import com.ga.environments.RunResult;
 import com.ga.genes.FloatGene;
@@ -21,10 +21,10 @@ import com.ga.individuals.Individual;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TestFloatPopulation extends AbstractTestGAEnvironment{
+public class TestFloatClassification extends AbstractTestGAEnvironment{
 
 	@Autowired
-	@Qualifier("floatingPopulation")
+	@Qualifier("floatGAEnvironment")
 	GAEnvironment customEnv;
 
 	@Test
@@ -36,8 +36,8 @@ public class TestFloatPopulation extends AbstractTestGAEnvironment{
 	public void testInputComparison(){
 		System.out.println();
 		FloatIndividual individual = (FloatIndividual) customEnv.getPopulation().getFittestIndividual();
-		ArrayList<FloatingRecord> correctRecords = individual.getCorrectRecords();
-		FloatingRecord record = correctRecords.get(0);
+		ArrayList<FloatRecord> correctRecords = individual.getCorrectRecords();
+		FloatRecord record = correctRecords.get(0);
 		
 		System.out.println(individual);
 		System.out.println(record);
@@ -89,9 +89,9 @@ public class TestFloatPopulation extends AbstractTestGAEnvironment{
 		ArrayList<RunResult> runResults = runMultipleGenerations(1, 10000, customEnv.getTargetFitness(), false);
 
 		FloatIndividual fittestsIndividual = (FloatIndividual) runResults.get(0).getFittestIndividualInRun();
-		ArrayList<FloatingRecord> testRecords = FileLoader.loadBitFileToArrayListFloat("float-data.txt", 6);
+		ArrayList<FloatRecord> testRecords = FileLoader.loadBitFileToArrayListFloat("float-data.txt", 6);
 		int score = 0;
-		for (FloatingRecord record : testRecords) {
+		for (FloatRecord record : testRecords) {
 			int targetOutput = record.getOutput();
 			int indOutput = fittestsIndividual.catergoriseFloatingRecord(record);
 			if (targetOutput == indOutput) {

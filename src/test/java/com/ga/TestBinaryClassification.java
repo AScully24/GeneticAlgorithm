@@ -20,10 +20,10 @@ import com.ga.individuals.Individual;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TestGAEnvironmentClassification extends AbstractTestGAEnvironment {
+public class TestBinaryClassification extends AbstractTestGAEnvironment {
 
 	@Autowired
-	@Qualifier("classificationPopulation")
+	@Qualifier("binaryGAEnvironment")
 	GAEnvironment customEnv;
 
 	@Test
