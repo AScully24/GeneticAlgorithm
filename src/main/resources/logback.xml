@@ -21,8 +21,11 @@
 
 	<appender name="FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<encoder>
+<!-- 		<encoder>
 			<pattern>%d{dd/MM/yy HH:mm:ss}-%msg%n </pattern>
+		</encoder> -->
+		<encoder>
+			<pattern>%msg%n </pattern>
 		</encoder>
 
 		<file>${LOG_FILE}</file>
@@ -38,6 +41,6 @@
 	<!-- Setting the root level of logging to INFO -->
 	<root level="info">
 		<appender-ref ref="STDOUT" /> 
-		<!-- <appender-ref ref="FILE" /> -->
+		<!-- <appender-ref ref="FILE" />  -->
 	</root>
 </configuration>

@@ -4,34 +4,29 @@ import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
-
 import com.ga.FileLoader;
 import com.ga.data.BinaryRecord;
-import com.ga.individuals.ClassificationIndividual;
+import com.ga.individuals.BinaryIndividual;
 import com.ga.individuals.Individual;
 
-@Component
-@ConfigurationProperties(prefix = "binary")
-public class ClassificationPopulation extends AbstractPopulation {
+public class BinaryPopulation extends AbstractPopulation {
 
 	ArrayList<BinaryRecord> trainingRecords;
 	String fileName;
 	int bitInput;
 
-	public ClassificationPopulation() {
+	public BinaryPopulation() {
 		super();
 	}
 
-	public ClassificationPopulation(int ruleCount, int bitInput, int populationSize, int mutationRate, ArrayList<BinaryRecord> trainingRecords) {
+	public BinaryPopulation(int ruleCount, int bitInput, int populationSize, int mutationRate, ArrayList<BinaryRecord> trainingRecords) {
 		super(ruleCount, populationSize, mutationRate);
 		this.bitInput = bitInput;
 		this.trainingRecords = trainingRecords;
 		generateNewRandomPopulation();
 	}
 
-	public ClassificationPopulation(ArrayList<Individual> population, int mutationRate) {
+	public BinaryPopulation(ArrayList<Individual> population, int mutationRate) {
 		super(population, mutationRate);
 	}
 
@@ -50,7 +45,7 @@ public class ClassificationPopulation extends AbstractPopulation {
 	public void generateNewRandomPopulation() {
 		ArrayList<Individual> populationArray = new ArrayList<Individual>();
 		for (int i = 0; i < populationSize; i++) {
-			ClassificationIndividual newIndividual = new ClassificationIndividual(bitInput * geneSize, trainingRecords, bitInput);
+			BinaryIndividual newIndividual = new BinaryIndividual(bitInput * geneSize, trainingRecords, bitInput);
 			newIndividual.setMutationRate(mutationRate);
 			newIndividual.setCorrectRecords(trainingRecords);
 			populationArray.add(newIndividual);

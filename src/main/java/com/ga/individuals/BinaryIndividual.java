@@ -8,19 +8,19 @@ import com.ga.data.Record;
 import com.ga.genes.BinaryGene;
 import com.ga.genes.Gene;
 
-public class ClassificationIndividual extends AbstractIndividual {
+public class BinaryIndividual extends AbstractIndividual {
 	
 	private int recordLength;
 	private static final int GENE_MAX_VALUE = 3;
 	ArrayList<BinaryRecord> correctRecords;
 	
-	public ClassificationIndividual(int geneArraySize, ArrayList<BinaryRecord> correctRecords, int recordLength) {
+	public BinaryIndividual(int geneArraySize, ArrayList<BinaryRecord> correctRecords, int recordLength) {
 		super(geneArraySize);
 		this.recordLength = recordLength;
 		this.correctRecords = correctRecords;
 	}
 
-	public ClassificationIndividual(ArrayList<Gene> genes, ArrayList<BinaryRecord> correctRecords, int recordLength) {
+	public BinaryIndividual(ArrayList<Gene> genes, ArrayList<BinaryRecord> correctRecords, int recordLength) {
 		super(genes);
 		this.recordLength = recordLength;
 		this.correctRecords = correctRecords;
@@ -96,12 +96,26 @@ public class ClassificationIndividual extends AbstractIndividual {
 	
 	@Override
 	protected Individual createChild(ArrayList<Gene> genes) {
-		return new ClassificationIndividual(genes, correctRecords,recordLength);
+		return new BinaryIndividual(genes, correctRecords,recordLength);
 	}
 
 	public void setCorrectRecords(ArrayList<BinaryRecord> correctRecords) {
 		this.correctRecords = correctRecords;
 	}
+
+	@Override
+	public String toString() {
+		ArrayList<BinaryRecord> records = genesToRecordArrayList();
+		String string = "";
+		for (BinaryRecord binaryRecord : records) {
+			string+= binaryRecord + "\n";
+		}
+		return string;
+	}
+	
+	
+	
+	
 	
 	
 }

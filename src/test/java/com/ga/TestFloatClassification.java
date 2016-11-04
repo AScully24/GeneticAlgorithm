@@ -3,6 +3,7 @@ package com.ga;
 import java.util.ArrayList;
 
 import org.apache.commons.lang.math.FloatRange;
+import org.assertj.core.data.Percentage;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,8 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.ga.data.FloatRecord;
 import com.ga.environments.GAEnvironment;
 import com.ga.environments.RunResult;
-import com.ga.genes.FloatGene;
-import com.ga.genes.Gene;
 import com.ga.individuals.FloatIndividual;
 import com.ga.individuals.Individual;
 
@@ -48,60 +47,44 @@ public class TestFloatClassification extends AbstractTestGAEnvironment{
 
 	@Test
 	public void testMultipleGenerations() {
-		ArrayList<RunResult> runResults = runMultipleGenerations(1, 100000, customEnv.getTargetFitness(), false);
+		ArrayList<RunResult> runResults = runMultipleGenerations(1, 1000, customEnv.getTargetFitness(), false);
 		System.out.println(runResults);
+		
 		FloatIndividual fittestsIndividual = (FloatIndividual) runResults.get(0).getFittestIndividualInRun();
-
-		ArrayList<Gene> fittestRecords = fittestsIndividual.getGenes();
-		
-		for (Gene gene : fittestRecords) {
-			FloatGene floatingGene = (FloatGene) gene;
-			System.out.println(floatingGene);
-		}
-		
 		Assert.assertTrue(fittestsIndividual.getFitness() == customEnv.getTargetFitness());
 	}
 
 	@Test
 	public void testMultipleRuns() {
-		ArrayList<RunResult> runResults = runMultipleGenerations(10, 10, customEnv.getTargetFitness(), false);
-
-		Individual fittestsIndividual = runResults.get(0).getFittestIndividualInRun();
-		ArrayList<Gene> fittestRecords = ((FloatIndividual) fittestsIndividual).getGenes();
-
-		// for (RunResult runResult : runResults) {
-		// System.out.println(runResult.toString());
-		// for (GenerationResult generationResult : runResult.getGenerationResults()) {
-		// System.out.println(runResult.toString() + "," + generationResult.toString());
-		// }
-		// }
-
-		for (Gene gene : fittestRecords) {
-			FloatGene floatingGene = (FloatGene) gene;
-			System.out.println(floatingGene);
-		}
+		ArrayList<RunResult> runResults = runMultipleGenerations(5, 10000, customEnv.getTargetFitness(), false);
 		
+		Individual fittestsIndividual = runResults.get(0).getFittestIndividualInRun();
 		Assert.assertTrue(fittestsIndividual.getFitness() == customEnv.getTargetFitness());
 	}
 	
 	@Test
 	public void testFittestIndividual(){
-		ArrayList<RunResult> runResults = runMultipleGenerations(1, 10000, customEnv.getTargetFitness(), false);
-
+		ArrayList<RunResult> runResults = runMultipleGenerations(1, 5000, customEnv.getTargetFitness(), false);
+		
+		//TODO: Test the fittest individual against the test data every X generations and graph the progress 
+		
 		FloatIndividual fittestsIndividual = (FloatIndividual) runResults.get(0).getFittestIndividualInRun();
-		ArrayList<FloatRecord> testRecords = FileLoader.loadBitFileToArrayListFloat("float-data.txt", 6);
+		ArrayList<FloatRecord> testRecords = FileLoader.loadBitFileToArrayListFloat("test-data.txt", 6);
+		
 		int score = 0;
 		for (FloatRecord record : testRecords) {
 			int targetOutput = record.getOutput();
 			int indOutput = fittestsIndividual.catergoriseFloatingRecord(record);
 			if (targetOutput == indOutput) {
-				
 				score++;
 			}
-//			System.out.println(targetOutput + "," + indOutput);
 		}
 		
-		System.out.printf("Target Correct: %d\nActual Correct: %d\nPerc Correct: %d\n",testRecords.size(),score,(score/testRecords.size() * 100));	
+		System.out.println("Fitness: " + fittestsIndividual.getFitness());
+		float value = ((float)score/(float)testRecords.size()) * 100;
+		Percentage percentage = Percentage.withPercentage(value);
+		System.out.printf("Target Correct: %d\nActual Correct: %d\nPerc Correct: %s\n",testRecords.size(),score,percentage);	
+		Assert.assertTrue(percentage.value > 90f);
 	}
 
 	@Override

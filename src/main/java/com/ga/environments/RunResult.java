@@ -3,7 +3,7 @@ package com.ga.environments;
 import java.util.ArrayList;
 
 import com.ga.individuals.Individual;
-import com.ga.populations.ClassificationPopulation;
+import com.ga.populations.BinaryPopulation;
 
 public class RunResult {
 	String problemName;
@@ -21,7 +21,7 @@ public class RunResult {
 		
 		for (GenerationResult generationResult : generationResults) {
 			Individual currentIndividual = generationResult.getFittestIndividual();
-			fittestIndividual = ClassificationPopulation.compareTwoIndividuals(fittestIndividual, currentIndividual);
+			fittestIndividual = BinaryPopulation.compareTwoIndividuals(fittestIndividual, currentIndividual);
 		}
 		
 		return fittestIndividual;

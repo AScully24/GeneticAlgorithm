@@ -8,7 +8,7 @@ import org.junit.Before;
 import com.ga.environments.GAEnvironment;
 import com.ga.environments.RunResult;
 import com.ga.individuals.Individual;
-import com.ga.populations.ClassificationPopulation;
+import com.ga.populations.BinaryPopulation;
 
 public abstract class AbstractTestGAEnvironment {
 
@@ -34,11 +34,11 @@ public abstract class AbstractTestGAEnvironment {
 		
 		for (RunResult runResult : runResults) {
 			Individual currentIndividual = runResult.getFittestIndividualInRun();
-			fittestIndividual  = ClassificationPopulation.compareTwoIndividuals(fittestIndividual, currentIndividual);
+			fittestIndividual  = BinaryPopulation.compareTwoIndividuals(fittestIndividual, currentIndividual);
 		}
 		
 		int maxFitness = fittestIndividual.getFitness();
-
+		System.out.println(fittestIndividual);
 		if (checkResult) {
 			Assert.assertTrue(maxFitness == targetFitness);
 		}

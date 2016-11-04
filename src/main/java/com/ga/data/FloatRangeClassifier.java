@@ -43,8 +43,16 @@ public class FloatRangeClassifier{
 			Float lowerTarget = lower.get(i);
 			Float upperTarget = upper.get(i);
 			
-			FloatRange range = new FloatRange(lowerTarget,upperTarget);
-			if (!range.containsFloat(value)) {
+//			FloatRange range = new FloatRange(lowerTarget,upperTarget);
+//			if (!range.containsFloat(value)) {
+//				return false;
+//			}
+			
+			if (value < lowerTarget) {
+				return false;
+			}
+			
+			if (value > upperTarget) {
 				return false;
 			}
 			

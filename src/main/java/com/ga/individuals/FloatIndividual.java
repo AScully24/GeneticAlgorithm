@@ -12,6 +12,7 @@ public class FloatIndividual extends AbstractIndividual {
 
 	ArrayList<FloatRecord> correctRecords;
 	int fitness = 0;
+
 	public FloatIndividual(int geneArraySize) {
 		super(geneArraySize);
 	}
@@ -32,19 +33,23 @@ public class FloatIndividual extends AbstractIndividual {
 	protected Individual createChild(ArrayList<Gene> childGenes) {
 		return new FloatIndividual(childGenes, correctRecords);
 	}
-
-	// @Override
-	// protected void mutateGenes(ArrayList<Gene> childGenes) {
-	// for (Gene gene : childGenes) {
-	// FloatGene floatGene = (FloatGene) gene;
-	// if (ThreadLocalRandom.current().nextInt(MUTATION_DIVIDER) <= mutationRate) {
-	// floatGene.setValue(ThreadLocalRandom.current().nextFloat());
-	// }
-	// }
-	// }
-
+	
 	@Override
 	protected void mutateGenes(ArrayList<Gene> childGenes) {
+		mutateGenesSimple(childGenes);
+//		mutateGenesAdavanced(childGenes);
+	}
+	
+	protected void mutateGenesSimple(ArrayList<Gene> childGenes) {
+		for (Gene gene : childGenes) {
+			FloatGene floatGene = (FloatGene) gene;
+			if (ThreadLocalRandom.current().nextInt(MUTATION_DIVIDER) <= mutationRate) {
+				floatGene.setValue(ThreadLocalRandom.current().nextFloat());
+			}
+		}
+	}
+
+	protected void mutateGenesAdavanced(ArrayList<Gene> childGenes) {
 		for (int i = 0; i < childGenes.size(); i += 13) {
 			for (int j = 0; j < 6; j++) {
 				if (ThreadLocalRandom.current().nextInt(MUTATION_DIVIDER) <= mutationRate) {
@@ -60,14 +65,14 @@ public class FloatIndividual extends AbstractIndividual {
 				}
 			}
 
-			if (ThreadLocalRandom.current().nextInt(MUTATION_DIVIDER) <= mutationRate) {	
+			if (ThreadLocalRandom.current().nextInt(MUTATION_DIVIDER) <= mutationRate) {
 				FloatGene gene = (FloatGene) childGenes.get(i + 12);
 				gene.setValue(randomInRange(0.0f, 1.0f));
-			}	
+			}
 		}
 
 	}
-	
+
 	@Override
 	protected int calculateFitness() {
 		int newFitness = 0;
@@ -123,17 +128,23 @@ public class FloatIndividual extends AbstractIndividual {
 		}
 		return 2;
 	}
-
-	// @Override
-	// protected ArrayList<Gene> createDefaultGenes() {
-	// // geneArraySize is the number of records in the the individual
-	// ArrayList<Gene> newGenes = new ArrayList<Gene>();
-	// for (int i = 0; i < geneArraySize; i++) {
-	// FloatGene gene = new FloatGene(ThreadLocalRandom.current().nextFloat());
-	// newGenes.add(gene);
-	// }
-	// return newGenes;
-	// }
+	
+	
+	@Override
+	protected ArrayList<Gene> createDefaultGenes() {
+		return createDefaultGenesSimple();
+//		return createDefaultGenesAdvanced();
+	}
+	
+	protected ArrayList<Gene> createDefaultGenesSimple() {
+		// geneArraySize is the number of records in the the individual
+		ArrayList<Gene> newGenes = new ArrayList<Gene>();
+		for (int i = 0; i < geneArraySize; i++) {
+			FloatGene gene = new FloatGene(ThreadLocalRandom.current().nextFloat());
+			newGenes.add(gene);
+		}
+		return newGenes;
+	}
 
 	public ArrayList<FloatRecord> getCorrectRecords() {
 		return correctRecords;
@@ -143,11 +154,10 @@ public class FloatIndividual extends AbstractIndividual {
 		return (float) (Math.random() < 0.5 ? ((1 - Math.random()) * (max - min) + min) : (Math.random() * (max - min) + min));
 	}
 
-	@Override
 	/**
 	 * Adds genes based on whether they are upper or lower values
 	 */
-	protected ArrayList<Gene> createDefaultGenes() {
+	protected ArrayList<Gene> createDefaultGenesAdvanced() {
 
 		ArrayList<Gene> newGenes = new ArrayList<Gene>();
 		for (int i = 0; i < geneArraySize; i += 13) {
@@ -179,4 +189,21 @@ public class FloatIndividual extends AbstractIndividual {
 	public int getFitness() {
 		return fitness;
 	}
+
+	@Override
+	public String toString() {
+		ArrayList<FloatRangeClassifier> classifiers = genesToRangeClassifier();
+		String string = "";
+		for (FloatRangeClassifier classifier : classifiers) {
+			ArrayList<Float> lower = classifier.getLower();
+			ArrayList<Float> upper = classifier.getUpper();
+			
+			
+			string+= lower + "\n";
+			string+= upper + "\n";
+			string+= classifier.getOutput() + "\n\n";
+		}
+		return string;
+	}
+	
 }
