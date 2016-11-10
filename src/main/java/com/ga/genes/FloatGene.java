@@ -24,7 +24,7 @@ public class FloatGene implements Gene {
 	}
 
 	public void setValue(Float value) {
-		this.value = value;
+//		this.value = value;
 		this.value = roundToNearestHalf(value);
 	}
 
