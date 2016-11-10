@@ -44,9 +44,9 @@ public class BinaryPopulation extends AbstractPopulation {
 	@Override
 	public void generateNewRandomPopulation() {
 		ArrayList<Individual> populationArray = new ArrayList<Individual>();
-		for (int i = 0; i < populationSize; i++) {
-			BinaryIndividual newIndividual = new BinaryIndividual(bitInput * geneSize, trainingRecords, bitInput);
-			newIndividual.setMutationRate(mutationRate);
+		for (int i = 0; i < data.getPopulationSize(); i++) {
+			BinaryIndividual newIndividual = new BinaryIndividual(bitInput * data.getGeneSize(), trainingRecords, bitInput);
+			newIndividual.setMutationRate(data.getMutationRate());
 			newIndividual.setCorrectRecords(trainingRecords);
 			populationArray.add(newIndividual);
 		}

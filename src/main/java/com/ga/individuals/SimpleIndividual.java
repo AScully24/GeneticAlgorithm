@@ -16,10 +16,13 @@ public class SimpleIndividual extends AbstractIndividual {
 
 	public SimpleIndividual(int geneArraySize) {
 		super(geneArraySize);
+		fitness = calculateFitness();
 	}
 
-	public SimpleIndividual(ArrayList<Gene> genes) {
-		super(genes);
+	public SimpleIndividual(ArrayList<Gene> genes, int mutationRate) {
+		super(genes, mutationRate);
+		mutateGenes();
+		fitness = calculateFitness();
 	}
 
 	@Override
@@ -31,39 +34,10 @@ public class SimpleIndividual extends AbstractIndividual {
 		}
 		return newGenes;
 	}
-	
-//	@Override
-//	public ArrayList<Individual> createChildren(Individual partner){
-//		int randomGenePoint = ThreadLocalRandom.current().nextInt(genes.size() + 1);
-//		ArrayList<Gene> childGenes = new ArrayList<Gene>();
-//
-//		ArrayList<Individual> children = new ArrayList<>();
-//
-//		for (int i = 0; i < randomGenePoint; i++) {
-//			Gene gene = this.genes.get(i);
-//			childGenes.add(new BinaryGene(((BinaryGene) gene).getValue()));
-//		}
-//
-//		for (int i = randomGenePoint; i < genes.size(); i++) {
-//			Gene gene = ((AbstractIndividual) partner).getGenes().get(i);
-//			childGenes.add(new BinaryGene(((BinaryGene) gene).getValue()));
-//		}
-//
-//		mutateGenes(childGenes);
-//
-//		children.add(createChild(childGenes));
-//		
-//		return children;
-//
-//	}
 
-	/**
-	 * 
-	 * @param genesToMutate
-	 */
 	@Override
-	protected void mutateGenes(ArrayList<Gene> genesToMutate) {
-		for (Gene gene : genesToMutate) {
+	public void mutateGenes() {
+		for (Gene gene : genes) {
 			if (ThreadLocalRandom.current().nextInt(MUTATION_DIVIDER) <= mutationRate) {
 				BinaryGene binaryGene = (BinaryGene) gene;
 				binaryGene.setValue(binaryGene.getValue() ^ 1);
@@ -84,9 +58,14 @@ public class SimpleIndividual extends AbstractIndividual {
 		}
 		return newFitness;
 	}
-	
+
 	@Override
-	protected AbstractIndividual createChild(ArrayList<Gene> genes) {
-		return new SimpleIndividual(genes);
+	protected Individual createChild(ArrayList<Gene> genes) {
+		return new SimpleIndividual(genes, mutationRate);
+	}
+
+	@Override
+	public int getFitness() {
+		return fitness;
 	}
 }

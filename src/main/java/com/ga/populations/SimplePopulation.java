@@ -18,8 +18,8 @@ public class SimplePopulation extends AbstractPopulation{
 	@PostConstruct
 	public void generateNewRandomPopulation() {
 		ArrayList<Individual> newPop = new ArrayList<Individual>();
-		for (int i = 0; i < populationSize; i++) {
-			newPop.add(new SimpleIndividual(geneSize));
+		for (int i = 0; i < data.getPopulationSize(); i++) {
+			newPop.add(new SimpleIndividual(data.getGeneSize()));
 		}
 		currentPopulation = newPop;
 	}

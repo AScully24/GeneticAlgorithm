@@ -9,7 +9,7 @@ public abstract class AbstractIndividual implements Individual {
 
 	protected ArrayList<Gene> genes;
 	protected int geneArraySize;
-//	protected int fitness;
+	protected int fitness;
 	protected int mutationRate;
 
 	public AbstractIndividual(int geneArraySize) {
@@ -17,7 +17,7 @@ public abstract class AbstractIndividual implements Individual {
 		genes = createDefaultGenes();
 	}
 
-	public AbstractIndividual(ArrayList<Gene> genes) {
+	public AbstractIndividual(ArrayList<Gene> genes, int mutationRate) {
 		this.genes = genes;
 		this.geneArraySize = genes.size();
 	}
@@ -28,9 +28,7 @@ public abstract class AbstractIndividual implements Individual {
 		ArrayList<Individual> children = new ArrayList<>();
 		
 		ArrayList<Gene> childGenes1 = crossoverGenes(this, partner, randomGenePoint);
-		mutateGenes(childGenes1);
 		Individual child1 = createChild(childGenes1);
-		child1.setMutationRate(mutationRate);
 		children.add(child1);
 		
 //		ArrayList<Gene> childGenes2 = crossoverGenes(partner,this, randomGenePoint);
@@ -59,7 +57,8 @@ public abstract class AbstractIndividual implements Individual {
 
 	protected abstract Individual createChild(ArrayList<Gene> childGenes);
 
-	protected abstract void mutateGenes(ArrayList<Gene> childGenes);
+	@Override
+	public abstract void mutateGenes();
 
 	/**
 	 * Loops through gene array and updates the individual's fitness
@@ -69,9 +68,7 @@ public abstract class AbstractIndividual implements Individual {
 	protected abstract ArrayList<Gene> createDefaultGenes();
 
 	@Override
-	public int getFitness() {
-		return calculateFitness();
-	}
+	public abstract int getFitness();
 
 	public ArrayList<Gene> getGenes() {
 		return genes;

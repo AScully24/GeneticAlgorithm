@@ -34,13 +34,13 @@
 		</rollingPolicy>
 		<triggeringPolicy
 			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-			<MaxFileSize>10MB</MaxFileSize>
+			<MaxFileSize>20MB</MaxFileSize>
 		</triggeringPolicy>
 	</appender>
 
 	<!-- Setting the root level of logging to INFO -->
 	<root level="info">
-		<appender-ref ref="STDOUT" /> 
-		<!-- <appender-ref ref="FILE" />  -->
+		<appender-ref ref="STDOUT" />  
+		<!-- <appender-ref ref="FILE" /> -->
 	</root>
 </configuration>

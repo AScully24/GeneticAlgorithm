@@ -22,7 +22,6 @@ public class FloatPopulation extends AbstractPopulation {
 
 	private String fileName;// = "data3.txt";
 	private ArrayList<FloatRecord> trainingRecords;
-	
 	public FloatPopulation() {
 		super();
 	}
@@ -36,6 +35,7 @@ public class FloatPopulation extends AbstractPopulation {
 	@PostConstruct
 	public void init() {
 		trainingRecords = FileLoader.loadBitFileToArrayListFloat(fileName, 6);
+		
 		generateNewRandomPopulation();
 	}
 
@@ -46,9 +46,9 @@ public class FloatPopulation extends AbstractPopulation {
 	@Override
 	public void generateNewRandomPopulation() {
 		ArrayList<Individual> populationArray = new ArrayList<Individual>();
-		for (int i = 0; i < populationSize; i++) {
-			FloatIndividual newIndividual = new FloatIndividual(geneSize, trainingRecords);
-			newIndividual.setMutationRate(mutationRate);
+		for (int i = 0; i < data.getPopulationSize(); i++) {
+			FloatIndividual newIndividual = new FloatIndividual(data.getGeneSize(), trainingRecords);
+			newIndividual.setMutationRate(data.getMutationRate());
 			populationArray.add(newIndividual);
 		}
 		currentPopulation = populationArray;
@@ -68,8 +68,5 @@ public class FloatPopulation extends AbstractPopulation {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
-	}
-	
-	
-	
+	}	
 }

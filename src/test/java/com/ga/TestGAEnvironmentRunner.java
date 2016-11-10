@@ -1,7 +1,5 @@
 package com.ga;
 
-import java.util.Calendar;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +22,9 @@ public class TestGAEnvironmentRunner {
 	
 	@Test
 	public void testRunAllGenerations(){
-		System.out.println(Calendar.getInstance().getTime());
+//		System.out.println(Calendar.getInstance().getTime());
 		runner.runAllEnvironments();
-		System.out.println(Calendar.getInstance().getTime());
+//		System.out.println(Calendar.getInstance().getTime());
 	}
 	
 }

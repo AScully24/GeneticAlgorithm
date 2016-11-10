@@ -1,7 +1,5 @@
 package com.ga;
 
-import java.util.ArrayList;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ga.environments.GAEnvironment;
-import com.ga.environments.RunResult;
 import com.ga.individuals.Individual;
 
 @RunWith(SpringRunner.class)
@@ -29,17 +26,15 @@ public class TestFiveBitClassification extends AbstractTestGAEnvironment {
 
 	@Test
 	public void testMultipleGenerations() {
-		ArrayList<RunResult> runResults = runMultipleGenerations(1, 100000, customEnv.getTargetFitness(), false);
+		Individual fittestsIndividual = runMultipleGenerations(1, 1000000, customEnv.getTargetFitness(), false);
 		
-		Individual fittestsIndividual = runResults.get(0).getFittestIndividualInRun();
 		Assert.assertTrue(fittestsIndividual.getFitness() == customEnv.getTargetFitness());
 	}
 
 	@Test
 	public void testMultipleRuns() {
-		ArrayList<RunResult> runResults = runMultipleGenerations(20, 10000, customEnv.getTargetFitness(), false);
+		Individual fittestsIndividual = runMultipleGenerations(20, 10000, customEnv.getTargetFitness(), false);
 
-		Individual fittestsIndividual = runResults.get(0).getFittestIndividualInRun();
 		Assert.assertTrue(fittestsIndividual.getFitness() == customEnv.getTargetFitness());
 	}
 

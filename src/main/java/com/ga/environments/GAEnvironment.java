@@ -6,9 +6,12 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ga.individuals.FloatIndividual;
+import com.ga.individuals.FloatIndividualTester;
 import com.ga.individuals.Individual;
 import com.ga.populations.AbstractPopulation;
 import com.ga.populations.Population;
+import com.ga.populations.PopulationData;
 
 /**
  * @author user_pc
@@ -121,33 +124,30 @@ public class GAEnvironment {
 			}
 		}
 
-		// if (weakestIndividual.getFitness() < fittestIndividual.getFitness()) {
-		popToChange.set(weakestIndex, fittestIndividual);
-		// }
+		if (weakestIndividual.getFitness() < fittestIndividual.getFitness()) {
+			popToChange.set(weakestIndex, fittestIndividual);
+		}
 
 		return popToChange;
 	}
 
-	public ArrayList<RunResult> multipleRuns(int runLimit, int generationLimit) {
-		ArrayList<RunResult> runResults = new ArrayList<RunResult>();
-
-		logger.info("Run_Number,Generation_Number,Max_Fitness,Average_Fitness,Solution_Found,mutation_rate,Problem_name");
+	
+	//TODO: move multipleRuns and multipleGenerations to the GAEnvironmentRunner class.
+	public Individual multipleRuns(int runLimit, int generationLimit) {
+//		ArrayList<RunResult> runResults = new ArrayList<RunResult>();
+		Individual ind = null;
+		logger.info("Run_Number,Generation_Number,Max_Fitness,Weakest_Fitness,Average_Fitness,Solution_Found,mutation_rate,gene_size,pop_size,Problem_name,Float_Test_Performance");
 		for (int runCount = 1; runCount <= runLimit; runCount++) {
 			// TODO: Prevent double creation of a new generation.
 			population.generateNewRandomPopulation();
-			ArrayList<GenerationResult> generationResult = multipleGenerations(runCount, generationLimit, targetFitness);
-
-			RunResult runResult = new RunResult(problemName, runCount, generationResult);
-			runResults.add(runResult);
-			// logger.info("Current Run: " + runCount);
+			ind = multipleGenerations(runCount, generationLimit, targetFitness);
 		}
-		return runResults;
+		return ind;
 	}
-
-	public ArrayList<GenerationResult> multipleGenerations(int runNumber, int generationLimit, int targetFitness) {
-		ArrayList<GenerationResult> generationResults = new ArrayList<GenerationResult>();
+	
+	public Individual multipleGenerations(int runNumber, int generationLimit, int targetFitness) {
 		Individual overallFittesIndividual = population.getFittestIndividual();
-
+		PopulationData data = population.getPopulationData();
 		for (int generationNumber = 1; generationNumber <= generationLimit; generationNumber++) {
 
 			generateNewPopulation();
@@ -156,22 +156,23 @@ public class GAEnvironment {
 			if (currentfittestsIndividual.getFitness() >= overallFittesIndividual.getFitness()) {
 				overallFittesIndividual = currentfittestsIndividual;
 			}
+			
+			Individual weakestIndividual = population.getWeakestIndividual();
 			boolean solutionFound = overallFittesIndividual.getFitness() == targetFitness;
-			logger.info("{},{},{},{},{},{},{}", runNumber, generationNumber, currentfittestsIndividual.getFitness(), population.getCurrentPopulationAverageFitness(), solutionFound, currentfittestsIndividual.getMutationRate(), problemName);
 
-			GenerationResult generationResult = new GenerationResult(overallFittesIndividual, generationNumber, solutionFound, false);
+			// Test FloatIndividual performance
+			String fittestTestResult = "-";
+			if (overallFittesIndividual instanceof FloatIndividual && (generationNumber % 20) == 0) {
+				fittestTestResult = FloatIndividualTester.testDataPerformancePercentage((FloatIndividual) overallFittesIndividual).toString();
+			}
+			logger.info("{},{},{},{},{},{},{},{},{},{},{}", runNumber, generationNumber, currentfittestsIndividual.getFitness(), weakestIndividual.getFitness(), population.getCurrentPopulationAverageFitness(), solutionFound, data.getMutationRate(), data.getGeneSize(), data.getPopulationSize(), problemName, fittestTestResult);
 
-			generationResults.add(generationResult);
-			// Stop creating new generations and return the fittest individual
 			if (solutionFound) {
-				generationResult.setLastGeneration(true);
-				return generationResults;
+				return overallFittesIndividual;
 			}
 		}
 
-		GenerationResult generationResult = new GenerationResult(overallFittesIndividual, generationLimit, false, true);
-		generationResults.add(generationResult);
-		return generationResults;
+		return overallFittesIndividual;
 	}
 
 	public Population getPopulation() {

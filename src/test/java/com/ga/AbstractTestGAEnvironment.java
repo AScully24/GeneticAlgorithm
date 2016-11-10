@@ -1,14 +1,10 @@
 package com.ga;
 
-import java.util.ArrayList;
-
 import org.junit.Assert;
 import org.junit.Before;
 
 import com.ga.environments.GAEnvironment;
-import com.ga.environments.RunResult;
 import com.ga.individuals.Individual;
-import com.ga.populations.BinaryPopulation;
 
 public abstract class AbstractTestGAEnvironment {
 
@@ -20,6 +16,7 @@ public abstract class AbstractTestGAEnvironment {
 	}
 	
 	public void runInitalCreation(boolean checkResult) {
+		System.out.println(gaEnv.getProblemName());
 		for (Individual individual : gaEnv.getPopulation().getCurrentPopulation()) {
 			System.out.println(individual.toString());
 		}
@@ -28,21 +25,15 @@ public abstract class AbstractTestGAEnvironment {
 		}
 	}
 
-	public ArrayList<RunResult> runMultipleGenerations(int runLimit, int generationCount, int targetFitness, boolean checkResult) {
-		ArrayList<RunResult> runResults = gaEnv.multipleRuns(runLimit, generationCount);
-		Individual fittestIndividual = runResults.get(0).getFittestIndividualInRun();
-		
-		for (RunResult runResult : runResults) {
-			Individual currentIndividual = runResult.getFittestIndividualInRun();
-			fittestIndividual  = BinaryPopulation.compareTwoIndividuals(fittestIndividual, currentIndividual);
-		}
-		
+	public Individual runMultipleGenerations(int runLimit, int generationCount, int targetFitness, boolean checkResult) {
+		Individual fittestIndividual = gaEnv.multipleRuns(runLimit, generationCount);
+				
 		int maxFitness = fittestIndividual.getFitness();
 		System.out.println(fittestIndividual);
 		if (checkResult) {
 			Assert.assertTrue(maxFitness == targetFitness);
 		}
-		return runResults;
+		return fittestIndividual;
 	}
 
 	public abstract void setGaEnv();

@@ -7,10 +7,7 @@ import com.ga.individuals.Individual;
 public abstract class AbstractPopulation implements Population {
 
 	protected ArrayList<Individual> currentPopulation;
-	protected String problemName;
-	protected int geneSize;
-	protected int populationSize;
-	protected int mutationRate;
+	protected PopulationData data = new PopulationData();
 
 	public AbstractPopulation() {
 		super();
@@ -18,14 +15,14 @@ public abstract class AbstractPopulation implements Population {
 
 	public AbstractPopulation(int ruleCount, int populationSize, int mutationRate) {
 		super();
-		this.geneSize = ruleCount;
-		this.populationSize = populationSize;
-		this.mutationRate = mutationRate;
+		this.data.setGeneSize(ruleCount);
+		this.data.setPopulationSize(populationSize);
+		this.data.setMutationRate(mutationRate);
 	}
 
 	public AbstractPopulation(ArrayList<Individual> population, int mutationRate) {
 		this.currentPopulation = population;
-		this.mutationRate = mutationRate;
+		this.data.setMutationRate(mutationRate);
 	}
 
 	@Override
@@ -63,6 +60,17 @@ public abstract class AbstractPopulation implements Population {
 		return fittestIndividual;
 	}
 
+	@Override
+	public Individual getWeakestIndividual() {
+		Individual weakestIndividual = currentPopulation.get(0);
+		for (Individual individual : currentPopulation) {
+			if (individual.getFitness() <= weakestIndividual.getFitness()) {
+				weakestIndividual = individual;
+			}
+		}
+		return weakestIndividual;
+	}
+	
 	public static Individual compareTwoIndividuals(Individual one, Individual two) {
 
 		if (one.getFitness() > two.getFitness()) {
@@ -81,38 +89,26 @@ public abstract class AbstractPopulation implements Population {
 		this.currentPopulation = population;
 	}
 
-	
-	
 	public int getGeneSize() {
-		return geneSize;
-	}
-
-	public void setGeneSize(int geneSize) {
-		this.geneSize = geneSize;
-	}
-
-	public int getPopulationSize() {
-		return populationSize;
-	}
-
-	public void setPopulationSize(int populationSize) {
-		this.populationSize = populationSize;
-	}
-
-	public int getMutationRate() {
-		return mutationRate;
-	}
-
-	public void setMutationRate(int mutationRate) {
-		this.mutationRate = mutationRate;
+		return data.getGeneSize();
 	}
 
 	public String getProblemName() {
-		return problemName;
+		return data.getProblemName();
 	}
 
-	public void setProblemName(String problemName) {
-		this.problemName = problemName;
+	public PopulationData getData() {
+		return data;
+	}
+
+	@Override
+	public void setPopulationData(PopulationData data) {
+		this.data = data;
+	}
+
+	@Override
+	public PopulationData getPopulationData() {
+		return data;
 	}
 
 }

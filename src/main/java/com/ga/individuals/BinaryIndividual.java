@@ -9,21 +9,24 @@ import com.ga.genes.BinaryGene;
 import com.ga.genes.Gene;
 
 public class BinaryIndividual extends AbstractIndividual {
-	
+
 	private int recordLength;
 	private static final int GENE_MAX_VALUE = 3;
 	ArrayList<BinaryRecord> correctRecords;
-	
+
 	public BinaryIndividual(int geneArraySize, ArrayList<BinaryRecord> correctRecords, int recordLength) {
 		super(geneArraySize);
 		this.recordLength = recordLength;
 		this.correctRecords = correctRecords;
+		fitness = calculateFitness();
 	}
 
-	public BinaryIndividual(ArrayList<Gene> genes, ArrayList<BinaryRecord> correctRecords, int recordLength) {
-		super(genes);
+	public BinaryIndividual(ArrayList<Gene> genes, ArrayList<BinaryRecord> correctRecords, int recordLength, int mutationRate) {
+		super(genes, mutationRate);
 		this.recordLength = recordLength;
 		this.correctRecords = correctRecords;
+		mutateGenes();
+		fitness = calculateFitness();
 	}
 
 	@Override
@@ -51,9 +54,9 @@ public class BinaryIndividual extends AbstractIndividual {
 		}
 		return newFitness;
 	}
-	
+
 	// TODO: Needs to be made more efficient.
-	private int randomNumberExcluding(int upper,int exclude){
+	private int randomNumberExcluding(int upper, int exclude) {
 		while (true) {
 			int nextInt = ThreadLocalRandom.current().nextInt(upper);
 			if (nextInt != exclude) {
@@ -61,31 +64,31 @@ public class BinaryIndividual extends AbstractIndividual {
 			}
 		}
 	}
-	
+
 	@Override
-	protected void mutateGenes(ArrayList<Gene> genesToMutate) {
-		
-		for (Gene gene : genesToMutate) {
-			if (ThreadLocalRandom.current().nextInt(MUTATION_DIVIDER) <= mutationRate) {				
-//				genesToMutate[i] = ThreadLocalRandom.current().nextInt(GENE_MAX_VALUE);
+	public void mutateGenes() {
+
+		for (Gene gene : genes) {
+			if (ThreadLocalRandom.current().nextInt(MUTATION_DIVIDER) <= mutationRate) {
+				// genesToMutate[i] = ThreadLocalRandom.current().nextInt(GENE_MAX_VALUE);
 				BinaryGene binaryGene = (BinaryGene) gene;
-				binaryGene.setValue(randomNumberExcluding(GENE_MAX_VALUE,binaryGene.getValue()));
+				binaryGene.setValue(randomNumberExcluding(GENE_MAX_VALUE, binaryGene.getValue()));
 			}
 		}
-		
+
 	}
 
 	public ArrayList<BinaryRecord> genesToRecordArrayList() {
 		ArrayList<BinaryRecord> records = new ArrayList<BinaryRecord>();
 		for (int i = 0; i < genes.size(); i += recordLength) {
-			
+
 			int[] input = new int[recordLength - 1];
 			for (int j = 0; j < input.length; j++) {
 				input[j] = ((BinaryGene) genes.get(i + j)).getValue();
 			}
-			
+
 			int output = ((BinaryGene) genes.get(i + recordLength - 1)).getValue();
-			
+
 			BinaryRecord newRecord = new BinaryRecord();
 			newRecord.setInput(input);
 			newRecord.setOutput(output);
@@ -93,10 +96,10 @@ public class BinaryIndividual extends AbstractIndividual {
 		}
 		return records;
 	}
-	
+
 	@Override
 	protected Individual createChild(ArrayList<Gene> genes) {
-		return new BinaryIndividual(genes, correctRecords,recordLength);
+		return new BinaryIndividual(genes, correctRecords, recordLength, mutationRate);
 	}
 
 	public void setCorrectRecords(ArrayList<BinaryRecord> correctRecords) {
@@ -108,14 +111,14 @@ public class BinaryIndividual extends AbstractIndividual {
 		ArrayList<BinaryRecord> records = genesToRecordArrayList();
 		String string = "";
 		for (BinaryRecord binaryRecord : records) {
-			string+= binaryRecord + "\n";
+			string += binaryRecord + "\n";
 		}
 		return string;
 	}
-	
-	
-	
-	
-	
-	
+
+	@Override
+	public int getFitness() {
+		return fitness;
+	}
+
 }

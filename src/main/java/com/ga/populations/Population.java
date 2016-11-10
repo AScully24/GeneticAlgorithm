@@ -25,5 +25,10 @@ public interface Population {
 	ArrayList<Individual> getCurrentPopulation();
 
 	void setCurrentPopulation(ArrayList<Individual> population);
+	
+	public void setPopulationData(PopulationData data);
+	
+	public PopulationData getPopulationData();
 
+	Individual getWeakestIndividual();	
 }
