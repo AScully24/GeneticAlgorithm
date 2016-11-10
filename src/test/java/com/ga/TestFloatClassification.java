@@ -60,7 +60,7 @@ public class TestFloatClassification extends AbstractTestGAEnvironment{
 	
 	@Test
 	public void testFittestIndividual(){
-		FloatIndividual fittestsIndividual = (FloatIndividual) runMultipleGenerations(1, 10000, customEnv.getTargetFitness(), false);
+		FloatIndividual fittestsIndividual = (FloatIndividual) runMultipleGenerations(5, 2000, customEnv.getTargetFitness(), false);
 		
 		ArrayList<FloatRecord> testRecords = FileLoader.loadBitFileToArrayListFloat("test-data.txt", 6);
 		
