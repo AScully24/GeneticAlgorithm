@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.ga.data.FloatRecord;
 import com.ga.environments.GAEnvironment;
 import com.ga.individuals.FloatIndividual;
+import com.ga.individuals.FloatIndividualTester;
 import com.ga.individuals.Individual;
 
 @RunWith(SpringRunner.class)
@@ -59,29 +60,17 @@ public class TestFloatClassification extends AbstractTestGAEnvironment{
 	
 	@Test
 	public void testFittestIndividual(){
-		FloatIndividual fittestsIndividual = (FloatIndividual) runMultipleGenerations(1, 100000, customEnv.getTargetFitness(), false);
+		FloatIndividual fittestsIndividual = (FloatIndividual) runMultipleGenerations(1, 10000, customEnv.getTargetFitness(), false);
 		
 		ArrayList<FloatRecord> testRecords = FileLoader.loadBitFileToArrayListFloat("test-data.txt", 6);
 		
-		int score = testDataPerformance(fittestsIndividual, testRecords);
+		int score = FloatIndividualTester.testDataPerformance(fittestsIndividual);
 		
 		System.out.println("Fitness: " + fittestsIndividual.getFitness());
 		float value = ((float)score/(float)testRecords.size()) * 100;
 		Percentage percentage = Percentage.withPercentage(value);
 		System.out.printf("Target Correct: %d\nActual Correct: %d\nPerc Correct: %s\n",testRecords.size(),score,percentage);	
 		Assert.assertTrue(percentage.value > 90f);
-	}
-
-	private int testDataPerformance(FloatIndividual fittestsIndividual, ArrayList<FloatRecord> testRecords) {
-		int score = 0;
-		for (FloatRecord record : testRecords) {
-			int targetOutput = record.getOutput();
-			int indOutput = fittestsIndividual.catergoriseFloatingRecord(record);
-			if (targetOutput == indOutput) {
-				score++;
-			}
-		}
-		return score;
 	}
 
 	@Override	
@@ -98,4 +87,5 @@ public class TestFloatClassification extends AbstractTestGAEnvironment{
 		
 		System.out.println(range.containsFloat(value));
 	}
+	
 }

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 import com.ga.data.BinaryRecord;
 import com.ga.data.FloatRecord;
+import com.ga.genes.FloatGene;
+import com.ga.genes.Gene;
 
 public class FileLoader {
 	
@@ -68,5 +70,27 @@ public class FileLoader {
 		}
 
 		return records;
+	}
+	
+	public static ArrayList<Gene> geneLoader(String fileLocation){
+		ArrayList<Gene> genes = new ArrayList<Gene>();
+		
+		File file = new File(fileLocation);
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			String line = br.readLine();
+			String[] split = line.split(",");
+			for (String string : split) {
+				Float value = Float.parseFloat(string);
+				FloatGene newGene = new FloatGene(value );
+				genes.add(newGene);
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		
+		return genes;
 	}
 }

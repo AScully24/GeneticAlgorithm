@@ -14,6 +14,10 @@ public class FloatIndividual extends AbstractIndividual {
 	ArrayList<FloatRecord> testRecords;
 	int fitness = 0;
 
+	public FloatIndividual(int geneArraySize) {
+		super(geneArraySize);
+	}
+	
 	public FloatIndividual(int geneArraySize, ArrayList<FloatRecord> correctRecords) {
 		super(geneArraySize);
 		this.trainingRecords = correctRecords;
@@ -187,18 +191,33 @@ public class FloatIndividual extends AbstractIndividual {
 	public int getFitness() {
 		return fitness;
 	}
+	
+	public void setGenes(ArrayList<Gene> genes){
+		this.genes = genes;
+		geneArraySize = genes.size();
+	}
 
 	@Override
 	public String toString() {
 		ArrayList<FloatRangeClassifier> classifiers = genesToRangeClassifier();
 		String string = "";
+		
 		for (FloatRangeClassifier classifier : classifiers) {
 			ArrayList<Float> lower = classifier.getLower();
 			ArrayList<Float> upper = classifier.getUpper();
+//			
+//			for (Float value : lower) {
+//				string += value + ",";
+//			}
+//			string+= classifier.getOutput();
+//			
+//			for (Float value : upper) {
+//				string += value + ",";
+//			}
 
-			string += lower + "\n";
-			string += upper + "\n";
-			string += classifier.getOutput() + "\n\n";
+			string += lower.toString().replaceAll("[\\[\\] ]", "") + "\n";
+			string += upper.toString().replaceAll("[\\[\\] ]", "") + ","+ classifier.getOutput() + "\n";
+//			string += classifier.getOutput() + "\n\n";
 		}
 		return string;
 	}
