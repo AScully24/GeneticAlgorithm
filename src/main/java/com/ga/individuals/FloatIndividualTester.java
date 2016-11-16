@@ -10,8 +10,8 @@ import com.ga.genes.Gene;
 
 public class FloatIndividualTester {
 	
-	private static ArrayList<FloatRecord> testRecords = FileLoader.loadBitFileToArrayListFloat("test-data.txt", 6);
-//	private static ArrayList<FloatRecord> testRecords = FileLoader.loadBitFileToArrayListFloat("data3-all_data.txt", 6);
+	private static ArrayList<FloatRecord> testRecords = FileLoader.loadBitFileToArrayListFloat("data/test-data.txt", 6);
+//	private static ArrayList<FloatRecord> testRecords = FileLoader.loadBitFileToArrayListFloat("data/data3-all_data.txt", 6);
 	
 	public static int testDataPerformance(FloatIndividual fittestsIndividual) {
 		int score = 0;
@@ -40,5 +40,9 @@ public class FloatIndividualTester {
 		FloatIndividual individual = new FloatIndividual(genes.size());
 		individual.setGenes(genes);
 		return individual;
+	}
+	
+	public static int getTargetRecordSize(){
+		return testRecords.size();
 	}
 }

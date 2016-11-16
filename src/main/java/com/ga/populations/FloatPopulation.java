@@ -19,9 +19,10 @@ import com.ga.individuals.Individual;
 @Component
 @ConfigurationProperties(prefix = "data3")
 public class FloatPopulation extends AbstractPopulation {
-
-	private String fileName;// = "data3.txt";
-	private ArrayList<FloatRecord> trainingRecords;
+	
+	String fileName;// = "data3.txt";
+	ArrayList<FloatRecord> trainingRecords;
+	
 	public FloatPopulation() {
 		super();
 	}
@@ -35,7 +36,6 @@ public class FloatPopulation extends AbstractPopulation {
 	@PostConstruct
 	public void init() {
 		trainingRecords = FileLoader.loadBitFileToArrayListFloat(fileName, 6);
-		
 		generateNewRandomPopulation();
 	}
 

@@ -61,15 +61,12 @@ public class TestFloatClassification extends AbstractTestGAEnvironment{
 	@Test
 	public void testFittestIndividual(){
 		FloatIndividual fittestsIndividual = (FloatIndividual) runMultipleGenerations(5, 2000, customEnv.getTargetFitness(), false);
-		
-		ArrayList<FloatRecord> testRecords = FileLoader.loadBitFileToArrayListFloat("test-data.txt", 6);
-		
-		int score = FloatIndividualTester.testDataPerformance(fittestsIndividual);
-		
+				
 		System.out.println("Fitness: " + fittestsIndividual.getFitness());
-		float value = ((float)score/(float)testRecords.size()) * 100;
-		Percentage percentage = Percentage.withPercentage(value);
-		System.out.printf("Target Correct: %d\nActual Correct: %d\nPerc Correct: %s\n",testRecords.size(),score,percentage);	
+		int score = FloatIndividualTester.testDataPerformance(fittestsIndividual);
+		Percentage percentage = FloatIndividualTester.testDataPerformancePercentage(fittestsIndividual);
+		int targetRecordSize = FloatIndividualTester.getTargetRecordSize();
+		System.out.printf("Target Correct: %d\nActual Correct: %d\nPerc Correct: %s\n",targetRecordSize,score,percentage);	
 		Assert.assertTrue(percentage.value > 90f);
 	}
 

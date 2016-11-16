@@ -7,8 +7,8 @@ import com.ga.individuals.FloatIndividual;
 import com.ga.individuals.FloatIndividualTester;
 
 public class TestFloatIndividualTester {
-	private static final String SIMPLE_FILE_LOCATION = "Float-Genes-Simple.txt";
-	private static final String COMPLEX_FILE_LOCATION = "Float-Genes-Complex.txt";
+	private static final String SIMPLE_FILE_LOCATION = "data/Float-Genes-Simple.txt";
+	private static final String COMPLEX_FILE_LOCATION = "data/Float-Genes-Complex.txt";
 	
 	@Test
 	public void testFloatIndividualLoader(){
