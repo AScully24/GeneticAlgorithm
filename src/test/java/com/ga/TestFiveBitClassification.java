@@ -33,7 +33,7 @@ public class TestFiveBitClassification extends AbstractTestGAEnvironment {
 
 	@Test
 	public void testMultipleRuns() {
-		Individual fittestsIndividual = runMultipleGenerations(20, 10000, customEnv.getTargetFitness(), false);
+		Individual fittestsIndividual = runMultipleGenerations(10, 100000, customEnv.getTargetFitness(), false);
 
 		Assert.assertTrue(fittestsIndividual.getFitness() == customEnv.getTargetFitness());
 	}

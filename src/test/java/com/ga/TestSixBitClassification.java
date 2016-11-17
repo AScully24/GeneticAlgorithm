@@ -33,7 +33,7 @@ public class TestSixBitClassification extends AbstractTestGAEnvironment {
 
 	@Test
 	public void testMultipleRuns() {
-		Individual fittestsIndividual = runMultipleGenerations(5, 10000, customEnv.getTargetFitness(), false);
+		Individual fittestsIndividual = runMultipleGenerations(10, 10000, customEnv.getTargetFitness(), false);
 
 		Assert.assertTrue(fittestsIndividual.getFitness() == customEnv.getTargetFitness());
 	}
