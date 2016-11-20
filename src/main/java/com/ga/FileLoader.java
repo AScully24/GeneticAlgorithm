@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import com.ga.data.BinaryRecord;
 import com.ga.data.FloatRecord;
+import com.ga.genes.BinaryGene;
 import com.ga.genes.FloatGene;
 import com.ga.genes.Gene;
 
@@ -90,7 +91,27 @@ public class FileLoader {
 			e.printStackTrace();
 		}
 
+		return genes;
+	}
+	
+	public static ArrayList<Gene> geneLoaderBinary(String fileLocation){
+		ArrayList<Gene> genes = new ArrayList<Gene>();
 		
+		File file = new File(fileLocation);
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			String line = br.readLine();
+			String[] split = line.split(",");
+			for (String string : split) {
+				int value = Integer.parseInt(string);
+				BinaryGene newGene = new BinaryGene(value);
+				genes.add(newGene);
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		return genes;
 	}
 }

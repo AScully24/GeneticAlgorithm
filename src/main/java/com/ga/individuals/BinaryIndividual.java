@@ -115,7 +115,7 @@ public class BinaryIndividual extends AbstractIndividual {
 		}
 		return string;
 	}
-
+	
 	@Override
 	public int getFitness() {
 		return fitness;

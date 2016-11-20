@@ -73,6 +73,12 @@ public abstract class AbstractIndividual implements Individual {
 	public ArrayList<Gene> getGenes() {
 		return genes;
 	}
+	
+	
+
+	public void setGenes(ArrayList<Gene> genes) {
+		this.genes = genes;
+	}
 
 	@Override
 	public String toString() {
