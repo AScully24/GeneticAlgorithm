@@ -11,12 +11,12 @@ public class FloatGene implements Gene {
 
 	public FloatGene(Float value) {
 		super();
-//		this.value = value;
 		this.value = roundToNearestHalf(value);
 	}
 
 	private float roundToNearestHalf(Float value) {
-		return Math.round(value * SCALE) / SCALE;
+		return value;
+//		return Math.round(value * SCALE) / SCALE;
 	}
 
 	public Float getValue() {
@@ -24,7 +24,6 @@ public class FloatGene implements Gene {
 	}
 
 	public void setValue(Float value) {
-//		this.value = value;
 		this.value = roundToNearestHalf(value);
 	}
 
@@ -37,5 +36,4 @@ public class FloatGene implements Gene {
 	public String toString() {
 		return value.toString();
 	}
-
 }

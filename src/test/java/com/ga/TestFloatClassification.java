@@ -42,7 +42,6 @@ public class TestFloatClassification extends AbstractTestGAEnvironment{
 		System.out.println(record);
 		System.out.println(individual.getFitness());
 		System.out.println();
-		
 	}
 
 	@Test
