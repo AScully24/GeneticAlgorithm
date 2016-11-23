@@ -4,35 +4,40 @@ import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
 import com.ga.FileLoader;
-import com.ga.data.BinaryRecord;
-import com.ga.individuals.BinaryIndividual;
+import com.ga.data.ContraRecord;
+import com.ga.individuals.ContraIndividual;
 import com.ga.individuals.Individual;
 
-public class BinaryPopulation extends AbstractPopulation {
+@Component
+@ConfigurationProperties(prefix = "contra")
+public class ContraPopulation extends AbstractPopulation {
 
-	ArrayList<BinaryRecord> trainingRecords;
+	ArrayList<ContraRecord> trainingRecords;
 	String fileName;
 	int bitInput;
 
-	public BinaryPopulation() {
+	public ContraPopulation() {
 		super();
 	}
 
-	public BinaryPopulation(int ruleCount, int bitInput, int populationSize, int mutationRate, ArrayList<BinaryRecord> trainingRecords) {
+	public ContraPopulation(int ruleCount, int bitInput, int populationSize, int mutationRate, ArrayList<ContraRecord> trainingRecords) {
 		super(ruleCount, populationSize, mutationRate);
 		this.bitInput = bitInput;
 		this.trainingRecords = trainingRecords;
 		generateNewRandomPopulation();
 	}
 
-	public BinaryPopulation(ArrayList<Individual> population, int mutationRate) {
+	public ContraPopulation(ArrayList<Individual> population, int mutationRate) {
 		super(population, mutationRate);
 	}
 
 	@PostConstruct
 	public void init() {
-		trainingRecords = FileLoader.loadBitFileToArrayList(fileName, bitInput - 1, " ");
+		trainingRecords = FileLoader.loadContraFileToArrayList(fileName, bitInput - 1, ",");
 		generateNewRandomPopulation();
 	}
 
@@ -45,7 +50,7 @@ public class BinaryPopulation extends AbstractPopulation {
 	public void generateNewRandomPopulation() {
 		ArrayList<Individual> populationArray = new ArrayList<Individual>();
 		for (int i = 0; i < data.getPopulationSize(); i++) {
-			BinaryIndividual newIndividual = new BinaryIndividual(bitInput * data.getGeneSize(), trainingRecords, bitInput);
+			ContraIndividual newIndividual = new ContraIndividual(bitInput * data.getGeneSize(), trainingRecords, bitInput);
 			newIndividual.setMutationRate(data.getMutationRate());
 			newIndividual.setCorrectRecords(trainingRecords);
 			populationArray.add(newIndividual);
@@ -53,20 +58,12 @@ public class BinaryPopulation extends AbstractPopulation {
 		currentPopulation = populationArray;
 	}
 
-	public ArrayList<BinaryRecord> getTrainingRecords() {
+	public ArrayList<ContraRecord> getTrainingRecords() {
 		return trainingRecords;
 	}
 
-	public void setTrainingRecords(ArrayList<BinaryRecord> trainingRecords) {
+	public void setTrainingRecords(ArrayList<ContraRecord> trainingRecords) {
 		this.trainingRecords = trainingRecords;
-	}
-
-	public int getBitInput() {
-		return bitInput;
-	}
-
-	public void setBitInput(int bitInput) {
-		this.bitInput = bitInput;
 	}
 
 	public String getFileName() {
@@ -77,9 +74,14 @@ public class BinaryPopulation extends AbstractPopulation {
 		this.fileName = fileName;
 	}
 
-	@Override
-	public String toString() {
-		return "ClassificationPopulation [trainingRecords=" + trainingRecords + ", fileName=" + fileName + ", bitInput=" + bitInput + "]";
+	public int getBitInput() {
+		return bitInput;
 	}
 
+	public void setBitInput(int bitInput) {
+		this.bitInput = bitInput;
+	}
+	
+	
+	
 }

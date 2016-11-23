@@ -3,7 +3,7 @@ package com.ga.individuals;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.ga.genes.BinaryGene;
+import com.ga.genes.IntegerGene;
 import com.ga.genes.Gene;
 
 /**
@@ -29,7 +29,7 @@ public class SimpleIndividual extends AbstractIndividual {
 	protected ArrayList<Gene> createDefaultGenes() {
 		ArrayList<Gene> newGenes = new ArrayList<Gene>();
 		for (int i = 0; i < geneArraySize; i++) {
-			BinaryGene binaryGene = new BinaryGene(ThreadLocalRandom.current().nextInt(GENE_MAX_VALUE));
+			IntegerGene binaryGene = new IntegerGene(ThreadLocalRandom.current().nextInt(GENE_MAX_VALUE));
 			newGenes.add(binaryGene);
 		}
 		return newGenes;
@@ -39,7 +39,7 @@ public class SimpleIndividual extends AbstractIndividual {
 	public void mutateGenes() {
 		for (Gene gene : genes) {
 			if (ThreadLocalRandom.current().nextInt(MUTATION_DIVIDER) <= mutationRate) {
-				BinaryGene binaryGene = (BinaryGene) gene;
+				IntegerGene binaryGene = (IntegerGene) gene;
 				binaryGene.setValue(binaryGene.getValue() ^ 1);
 			}
 		}
@@ -52,7 +52,7 @@ public class SimpleIndividual extends AbstractIndividual {
 	public int calculateFitness() {
 		int newFitness = 0;
 		for (Gene gene : genes) {
-			if (((BinaryGene) gene).getValue() == 1) {
+			if (((IntegerGene) gene).getValue() == 1) {
 				newFitness++;
 			}
 		}

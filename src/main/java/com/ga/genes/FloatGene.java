@@ -15,8 +15,8 @@ public class FloatGene implements Gene {
 	}
 
 	private float roundToNearestHalf(Float value) {
-		return value;
-//		return Math.round(value * SCALE) / SCALE;
+//		return value;
+		return Math.round(value * SCALE) / SCALE;
 	}
 
 	public Float getValue() {

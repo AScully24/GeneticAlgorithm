@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.ga.environments.GAEnvironment;
 import com.ga.populations.BinaryPopulation;
+import com.ga.populations.ContraPopulation;
 import com.ga.populations.FloatPopulation;
 import com.ga.populations.SimplePopulation;
 
@@ -18,6 +19,9 @@ public class GAEnvironmentGenerator {
 
 	@Autowired
 	FloatPopulation floatPopulation;
+
+	@Autowired
+	ContraPopulation contraPopulation;
 
 	@Autowired
 	SimplePopulation simplePopulation;
@@ -49,6 +53,11 @@ public class GAEnvironmentGenerator {
 	@Bean
 	public GAEnvironment floatGAEnvironment() {
 		return new GAEnvironment(floatPopulation, floatPopulation.getProblemName(), floatPopulation.getTrainingRecords().size());
+	}
+	
+	@Bean
+	public GAEnvironment contraGAEnvironment() {
+		return new GAEnvironment(contraPopulation, contraPopulation.getProblemName(), contraPopulation.getTrainingRecords().size());
 	}
 	
 	

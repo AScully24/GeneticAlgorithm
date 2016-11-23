@@ -3,25 +3,24 @@ package com.ga.individuals;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.ga.data.BinaryRecord;
-import com.ga.data.Record;
-import com.ga.genes.IntegerGene;
+import com.ga.data.ContraRecord;
 import com.ga.genes.Gene;
+import com.ga.genes.IntegerGene;
 
-public class BinaryIndividual extends AbstractIndividual {
+public class ContraIndividual extends AbstractIndividual{
 
 	private int recordLength;
-	private static final int GENE_MAX_VALUE = 3;
-	ArrayList<BinaryRecord> correctRecords;
+	private static final int GENE_MAX_VALUE = 49;
+	ArrayList<ContraRecord> correctRecords;
 
-	public BinaryIndividual(int geneArraySize, ArrayList<BinaryRecord> correctRecords, int recordLength) {
+	public ContraIndividual(int geneArraySize, ArrayList<ContraRecord> correctRecords, int recordLength) {
 		super(geneArraySize);
 		this.recordLength = recordLength;
 		this.correctRecords = correctRecords;
 		fitness = calculateFitness();
 	}
 
-	public BinaryIndividual(ArrayList<Gene> genes, ArrayList<BinaryRecord> correctRecords, int recordLength, int mutationRate) {
+	public ContraIndividual(ArrayList<Gene> genes, ArrayList<ContraRecord> correctRecords, int recordLength, int mutationRate) {
 		super(genes, mutationRate);
 		this.recordLength = recordLength;
 		this.correctRecords = correctRecords;
@@ -41,9 +40,9 @@ public class BinaryIndividual extends AbstractIndividual {
 	@Override
 	public int calculateFitness() {
 		int newFitness = 0;
-		ArrayList<BinaryRecord> records = genesToRecordArrayList();
-		for (BinaryRecord correctRecord : correctRecords) {
-			for (Record rule : records) {
+		ArrayList<ContraRecord> records = genesToRecordArrayList();
+		for (ContraRecord correctRecord : correctRecords) {
+			for (ContraRecord rule : records) {
 				if (rule.compareInputs(correctRecord)) {
 					if (rule.compareOutputs(correctRecord)) {
 						newFitness++;
@@ -67,10 +66,8 @@ public class BinaryIndividual extends AbstractIndividual {
 
 	@Override
 	public void mutateGenes() {
-
 		for (Gene gene : genes) {
 			if (ThreadLocalRandom.current().nextInt(MUTATION_DIVIDER) <= mutationRate) {
-				// genesToMutate[i] = ThreadLocalRandom.current().nextInt(GENE_MAX_VALUE);
 				IntegerGene binaryGene = (IntegerGene) gene;
 				binaryGene.setValue(randomNumberExcluding(GENE_MAX_VALUE, binaryGene.getValue()));
 			}
@@ -78,18 +75,18 @@ public class BinaryIndividual extends AbstractIndividual {
 
 	}
 
-	public ArrayList<BinaryRecord> genesToRecordArrayList() {
-		ArrayList<BinaryRecord> records = new ArrayList<BinaryRecord>();
+	public ArrayList<ContraRecord> genesToRecordArrayList() {
+		ArrayList<ContraRecord> records = new ArrayList<ContraRecord>();
 		for (int i = 0; i < genes.size(); i += recordLength) {
 
-			int[] input = new int[recordLength - 1];
-			for (int j = 0; j < input.length; j++) {
-				input[j] = ((IntegerGene) genes.get(i + j)).getValue();
+			ArrayList<Integer> input = new ArrayList<Integer>();
+			for (int j = 0; j < recordLength - 1; j++) {
+				input.add(((IntegerGene) genes.get(i + j)).getValue());
 			}
 
 			int output = ((IntegerGene) genes.get(i + recordLength - 1)).getValue();
 
-			BinaryRecord newRecord = new BinaryRecord();
+			ContraRecord newRecord = new ContraRecord();
 			newRecord.setInput(input);
 			newRecord.setOutput(output);
 			records.add(newRecord);
@@ -99,19 +96,19 @@ public class BinaryIndividual extends AbstractIndividual {
 
 	@Override
 	protected Individual createChild(ArrayList<Gene> genes) {
-		return new BinaryIndividual(genes, correctRecords, recordLength, mutationRate);
+		return new ContraIndividual(genes, correctRecords, recordLength, mutationRate);
 	}
 
-	public void setCorrectRecords(ArrayList<BinaryRecord> correctRecords) {
+	public void setCorrectRecords(ArrayList<ContraRecord> correctRecords) {
 		this.correctRecords = correctRecords;
 	}
 
 	@Override
 	public String toString() {
-		ArrayList<BinaryRecord> records = genesToRecordArrayList();
+		ArrayList<ContraRecord> records = genesToRecordArrayList();
 		String string = "";
-		for (BinaryRecord binaryRecord : records) {
-			string += binaryRecord + "\n";
+		for (ContraRecord contraRecord : records) {
+			string += contraRecord + "\n";
 		}
 		return string;
 	}
@@ -120,5 +117,4 @@ public class BinaryIndividual extends AbstractIndividual {
 	public int getFitness() {
 		return fitness;
 	}
-
 }

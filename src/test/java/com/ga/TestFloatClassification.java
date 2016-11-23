@@ -51,7 +51,7 @@ public class TestFloatClassification extends AbstractTestGAEnvironment{
 	}	
 
 	@Test
-	public void testMultipleRuns() {
+	public void  testMultipleRuns() {
 		Individual fittestsIndividual = runMultipleGenerations(5, 10000, customEnv.getTargetFitness(), false);
 		
 		Assert.assertTrue(fittestsIndividual.getFitness() == customEnv.getTargetFitness());

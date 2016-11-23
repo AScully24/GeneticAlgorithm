@@ -7,14 +7,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import com.ga.data.BinaryRecord;
+import com.ga.data.ContraRecord;
 import com.ga.data.FloatRecord;
-import com.ga.genes.BinaryGene;
 import com.ga.genes.FloatGene;
 import com.ga.genes.Gene;
+import com.ga.genes.IntegerGene;
 
 public class FileLoader {
 	
-	public static ArrayList<BinaryRecord> loadBitFileToArrayList(String fileLocation, int arraySize) {
+	public static ArrayList<BinaryRecord> loadBitFileToArrayList(String fileLocation, int arraySize, String lineSplit) {
 		ArrayList<BinaryRecord> records = new ArrayList<>();
 		File file = new File(fileLocation);
 
@@ -22,7 +23,7 @@ public class FileLoader {
 			String line;
 
 			while ((line = br.readLine()) != null) {
-				String[] split = line.split(" ");
+				String[] split = line.split(lineSplit);
 				BinaryRecord newRecord = new BinaryRecord();
 
 				int[] intArr = new int[arraySize];
@@ -35,6 +36,34 @@ public class FileLoader {
 
 				newRecord.setInput(intArr);
 				newRecord.setOutput(Integer.parseInt(split[1]));
+				records.add(newRecord);
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return records;
+	}
+
+	public static ArrayList<ContraRecord> loadContraFileToArrayList(String fileLocation, int arraySize, String lineSplit) {
+		ArrayList<ContraRecord> records = new ArrayList<>();
+		File file = new File(fileLocation);
+
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			String line;
+
+			while ((line = br.readLine()) != null) {
+				String[] split = line.split(lineSplit);
+				ContraRecord newRecord = new ContraRecord();
+				ArrayList<Integer> intArr = new ArrayList<Integer>();
+				
+				for (int i = 0; i < split.length-1; i++) {
+					intArr.add(Integer.parseInt(split[i]));
+				}
+				
+				newRecord.setInput(intArr);
+				newRecord.setOutput(Integer.parseInt(split[split.length-1]));
 				records.add(newRecord);
 			}
 			br.close();
@@ -104,7 +133,7 @@ public class FileLoader {
 			String[] split = line.split(",");
 			for (String string : split) {
 				int value = Integer.parseInt(string);
-				BinaryGene newGene = new BinaryGene(value);
+				IntegerGene newGene = new IntegerGene(value);
 				genes.add(newGene);
 			}
 			br.close();
