@@ -1,5 +1,0 @@
-com\ga\beans\EnvironmentBeans.class
-com\ga\Individual.class
-com\ga\Application.class
-com\ga\environments\CrossoverMutateEnvironment.class
-com\ga\environments\GAEnvironment.class
